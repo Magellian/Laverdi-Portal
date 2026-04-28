@@ -1,0 +1,183 @@
+═══════════════════════════════════════════════════════════════════════════
+  LAVERDI PORTAL — FRIDAY DEPLOYMENT QUICK REFERENCE CARD
+═══════════════════════════════════════════════════════════════════════════
+
+📅 DATE: Friday, April 17, 2026
+⏰ DEPLOYMENT: 10:00 AM - 10:15 AM PST
+📊 DECISION: 09:45 AM (GO/NO-GO)
+🎯 TARGET: laverdi.tech on VPS 64.23.142.154
+
+═══════════════════════════════════════════════════════════════════════════
+CHRIS'S CHECKLIST (09:00 - 09:45 AM)
+═══════════════════════════════════════════════════════════════════════════
+
+1. Code Review (5 min)
+   git pull origin main
+   ✓ Check no unexpected changes
+
+2. VPS Check (5 min)
+   ssh root@64.23.142.154
+   ✓ VPS online, Docker running, >500MB free
+
+3. Supabase Check (5 min)
+   ✓ All 4 tables exist
+   ✓ RLS enabled on all tables
+   ✓ 11 policies visible
+
+4. Stripe Check (5 min)
+   ✓ Test keys visible
+   ✓ Webhook endpoint exists
+
+5. Local Dev Test (5 min)
+   npm run dev
+   ✓ Server starts
+   ✓ Landing page loads
+   ✓ Molty visible
+   Ctrl+C to stop
+
+6. Docker Build (10 min)
+   docker-compose build --no-cache
+   ✓ Build succeeds
+
+7. Final Check (5 min)
+   ✓ All docs in place
+   ✓ Scripts ready
+   ✓ Credentials verified
+
+══════════════════════════════════════════════════════════════════════════════
+09:45 AM — DECISION TIME
+══════════════════════════════════════════════════════════════════════════════
+
+All checks pass? → GO (proceed to deployment)
+Any failure?    → STOP (wait for fix or delay to next day)
+
+═══════════════════════════════════════════════════════════════════════════
+CRAWFORD'S DEPLOYMENT SEQUENCE (10:00 AM)
+═══════════════════════════════════════════════════════════════════════════
+
+1. SSH to VPS (1 min)
+   ssh -i "key.pem" root@64.23.142.154
+   cd /root/laverdi-portal
+
+2. Pull Code (1 min)
+   git pull origin main
+
+3. Stop Services (1 min)
+   docker-compose down
+
+4. Build (3-5 min)
+   docker-compose build --no-cache
+
+5. Start (2 min)
+   docker-compose up -d
+   docker-compose ps
+
+6. Verify (2 min)
+   sleep 30
+   docker-compose logs laverdi-portal | tail -20
+
+TOTAL: ~12-15 minutes
+
+═══════════════════════════════════════════════════════════════════════════
+POST-DEPLOYMENT CHECKS (10:15 AM)
+═══════════════════════════════════════════════════════════════════════════
+
+□ Health Script
+  ./health-check.sh
+  → Should say "✓ HEALTH CHECK PASSED"
+
+□ Browser Test (HTTP)
+  http://laverdi.tech
+  → Should load landing page
+
+□ Browser Test (HTTPS)
+  https://laverdi.tech
+  → Should load with SSL
+
+□ Signup Test
+  Create test account with new email
+  → Should redirect to dashboard
+
+□ DevTools Check (F12)
+  Application → Cookies
+  → Should see sb-*-auth-token (HttpOnly, Secure)
+
+□ Molty Visual Check
+  Landing page → Molty should be visible
+  → Stumpy legs ✓
+  → No claw triangles ✓
+  → Good proportions ✓
+
+□ Log Check
+  docker-compose logs laverdi-portal
+  → Should have 0 errors
+
+═══════════════════════════════════════════════════════════════════════════
+IF SOMETHING GOES WRONG
+═══════════════════════════════════════════════════════════════════════════
+
+Quick Fix Options:
+1. Docker restart:   docker-compose restart laverdi-portal
+2. Check logs:       docker-compose logs -f laverdi-portal
+3. Emergency stop:   docker-compose down
+4. Rollback:         ./ROLLBACK.sh
+
+Critical Issues (Execute Rollback):
+❌ Site completely down
+❌ Auth system broken (users can't login)
+❌ Database unreachable
+❌ Database errors in logs
+
+═══════════════════════════════════════════════════════════════════════════
+LAUNCH WINDOW
+═══════════════════════════════════════════════════════════════════════════
+
+10:15 AM - 12:00 PM: MONITORING PERIOD
+  • Every 10 min: Check CPU/memory, watch for errors
+  • Every 30 min: Test signup, verify data in Supabase
+  • Any error: Investigate and fix or rollback
+
+12:00 PM: LAUNCH ANNOUNCEMENT
+  ✅ Post on social media
+  ✅ Email to beta testers
+  ✅ Share: https://laverdi.tech
+
+═══════════════════════════════════════════════════════════════════════════
+CREDENTIALS (All Verified)
+═══════════════════════════════════════════════════════════════════════════
+
+Supabase:
+  URL: https://dcvrkpgvxqdcboostkpz.supabase.co
+  Publishable Key: (in .env.production) ✓
+  Service Role: (in .env.production) ✓
+
+Stripe:
+  Publishable: pk_test_51THBZMBTYRav1Hp... ✓
+  Secret: sk_test_51THBZMBTYRav1Hp... ✓
+  Webhook: whsec_a10GETjx4qObO8... ✓
+
+═══════════════════════════════════════════════════════════════════════════
+SUCCESS = NO ERRORS + 2 HOURS OF SUCCESSFUL OPERATION
+═══════════════════════════════════════════════════════════════════════════
+
+Final Status:
+  ✅ Code ready
+  ✅ Database ready
+  ✅ Auth ready
+  ✅ Molty ready
+  ✅ Infrastructure ready
+  ✅ Documentation ready
+  ✅ Scripts ready
+  ✅ Credentials verified
+
+🚀 READY TO LAUNCH
+
+═══════════════════════════════════════════════════════════════════════════
+Questions? Check:
+  1. FRIDAY_MORNING_CHECKLIST.md (detailed steps)
+  2. LAVERDI_VPS_DEPLOYMENT_SCRIPT.md (deployment guide)
+  3. FRIDAY_GO_LIVE_SUMMARY.md (full context)
+
+═══════════════════════════════════════════════════════════════════════════
+Good luck Friday morning. You've got this. 🎉
+═══════════════════════════════════════════════════════════════════════════

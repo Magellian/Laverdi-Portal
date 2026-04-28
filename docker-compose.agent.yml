@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  agent-service:
+    build:
+      context: ./agent-service
+      dockerfile: Dockerfile
+    container_name: laverdi-agent
+    ports:
+      - "5000:5000"
+    networks:
+      - laverdi-net
+    volumes:
+      - agent-data:/app
+    environment:
+      - FLASK_ENV=production
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped
+
+networks:
+  laverdi-net:
+    external: true
+
+volumes:
+  agent-data:
+    driver: local

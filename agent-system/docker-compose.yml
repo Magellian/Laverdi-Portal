@@ -1,0 +1,57 @@
+version: '3.8'
+
+networks:
+  laverdi-net:
+    driver: bridge
+
+services:
+  agent:
+    build:
+      context: ./agent-service
+      dockerfile: Dockerfile
+    container_name: agent-service
+    ports:
+      - "5000:5000"
+    volumes:
+      - agent-data:/app/data
+    networks:
+      - laverdi-net
+    environment:
+      - FLASK_ENV=production
+    healthcheck:
+      test: ["CMD", "python", "-c", "import requests; requests.get('http://localhost:5000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  command-center:
+    build:
+      context: ./command-center
+      dockerfile: Dockerfile
+    container_name: command-center
+    ports:
+      - "8000:8000"
+    networks:
+      - laverdi-net
+    environment:
+      - COMMAND_CENTER_URL=http://localhost:8000
+    depends_on:
+      agent:
+        condition: service_healthy
+    restart: unless-stopped
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  agent-data:
+    driver: local

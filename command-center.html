@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Command Center</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900">
+    <div class="min-h-screen text-white p-6">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="text-4xl font-bold text-blue-400 mb-2">🤖 Command Center</h1>
+            <p class="text-slate-400 mb-8">Manage agents and execute tasks</p>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                    <h2 class="text-xl font-bold mb-4 text-blue-300">Agents</h2>
+                    <div id="agents" class="space-y-2">
+                        <button onclick="selectAgent('http://laverdi-agent:5000')" class="w-full text-left bg-blue-600 p-2 rounded mb-2">
+                            <div class="font-medium">agent-001</div>
+                            <div class="text-xs text-slate-200">http://laverdi-agent:5000</div>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                    <h2 class="text-xl font-bold mb-4 text-blue-300">Send Task</h2>
+                    <input type="text" id="taskName" placeholder="Task name" class="w-full px-3 py-2 bg-slate-700 rounded mb-2 text-white text-sm"/>
+                    <input type="text" id="command" placeholder="Command" class="w-full px-3 py-2 bg-slate-700 rounded mb-2 text-white text-sm"/>
+                    <input type="text" id="args" placeholder="Arguments" class="w-full px-3 py-2 bg-slate-700 rounded mb-2 text-white text-sm"/>
+                    <button onclick="sendTask()" class="w-full bg-green-600 hover:bg-green-700 px-3 py-2 rounded text-sm font-medium">Send Task</button>
+                </div>
+                
+                <div class="bg-slate-800 rounded-lg p-6 border border-slate-700">
+                    <h2 class="text-xl font-bold mb-4 text-blue-300">Tasks</h2>
+                    <div id="tasks" class="space-y-2 max-h-96 overflow-y-auto"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let selectedAgent = 'http://laverdi-agent:5000';
+        
+        async function loadTasks() {
+            try {
+                const res = await fetch(`${selectedAgent}/tasks`);
+                const data = await res.json();
+                const html = (data.tasks || []).slice(0, 20).map(t => `
+                    <div class="bg-slate-700 p-2 rounded text-xs border border-slate-600">
+                        <div class="font-medium text-blue-300">${t.name}</div>
+                        <div class="${t.status === 'completed' ? 'text-green-400' : 'text-yellow-400'}">${t.status}</div>
+                        ${t.output ? `<div class="text-slate-300 bg-slate-800 p-1 rounded mt-1 max-h-20 overflow-y-auto whitespace-pre-wrap text-xs">${t.output.slice(0, 150)}</div>` : ''}
+                    </div>
+                `).join('');
+                document.getElementById('tasks').innerHTML = html || '<p class="text-slate-500">No tasks</p>';
+            } catch (e) {
+                console.error(e);
+            }
+        }
+        
+        function selectAgent(url) {
+            selectedAgent = url;
+            loadTasks();
+        }
+        
+        async function sendTask() {
+            const name = document.getElementById('taskName').value;
+            const command = document.getElementById('command').value;
+            const args = document.getElementById('args').value;
+            if (!command) return alert('Enter command');
+            
+            try {
+                const res = await fetch(`${selectedAgent}/task`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({name: name || 'unnamed', command, args})
+                });
+                if (res.ok) {
+                    document.getElementById('taskName').value = '';
+                    document.getElementById('command').value = '';
+                    document.getElementById('args').value = '';
+                    setTimeout(loadTasks, 500);
+                }
+            } catch (e) {
+                alert('Failed to send task: ' + e.message);
+            }
+        }
+        
+        loadTasks();
+        setInterval(loadTasks, 3000);
+    </script>
+</body>
+</html>

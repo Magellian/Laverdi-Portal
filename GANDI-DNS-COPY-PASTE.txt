@@ -1,0 +1,98 @@
+═══════════════════════════════════════════════════════════════════════════════
+  GANDI DNS RECORDS - COPY & PASTE
+  
+  For: laverdi.tech
+  System: SendGrid Email Integration
+═══════════════════════════════════════════════════════════════════════════════
+
+HOW TO ADD THESE RECORDS:
+
+1. Go to: https://www.gandi.net
+2. Log in
+3. Click: Domains
+4. Click: laverdi.tech
+5. Click: DNS Records (or "Manage Zone")
+6. Click: "Add a DNS Record" (or "Add Record")
+7. For EACH record below:
+   - Copy Name → Paste into "Name" field
+   - Copy Type → Select from dropdown
+   - Copy Value → Paste into "Value" field
+   - Click "Save"
+8. Repeat for all 3 records
+9. Done! DNS will propagate in 5-10 minutes
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+RECORD #1 (CNAME - sendgrid domainkey)
+─────────────────────────────────────────────────────────────────────────────
+
+Type:   CNAME
+Name:   sendgrid._domainkey
+Value:  sendgrid.net
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+RECORD #2 (CNAME - em subdomain)
+─────────────────────────────────────────────────────────────────────────────
+
+Type:   CNAME
+Name:   em
+Value:  sendgrid.net
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+RECORD #3 (TXT - SPF record)
+─────────────────────────────────────────────────────────────────────────────
+
+Type:   TXT
+Name:   laverdi.tech (or leave blank/root)
+Value:  v=spf1 sendgrid.net ~all
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+VERIFICATION CHECKLIST:
+
+After adding records, you should see in Gandi DNS:
+
+✓ sendgrid._domainkey     CNAME    sendgrid.net
+✓ em                      CNAME    sendgrid.net
+✓ laverdi.tech (or @)     TXT      v=spf1 sendgrid.net ~all
+
+Plus your existing records (A, MX, NS, etc.)
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+NEXT STEPS:
+
+1. Add all 3 records in Gandi
+2. Wait 5-10 minutes for DNS propagation
+3. Go to SendGrid: https://app.sendgrid.com
+4. Settings → Sender Authentication
+5. Click "Verify Domain"
+6. See ✅ checkmarks when ready
+7. Done! Emails work immediately
+
+
+═══════════════════════════════════════════════════════════════════════════════
+
+TROUBLESHOOTING:
+
+Can't find DNS section in Gandi?
+  → Look for "Manage Zone" or "DNS Records"
+  → Should be under domain settings
+
+Record not saving?
+  → Click "Save" button after each entry
+  → Reload page if stuck
+
+Want to verify records before Gandi confirms?
+  → Go to https://mxtoolbox.com
+  → Search: laverdi.tech
+  → Should show your 3 new records in 5-10 minutes
+
+═══════════════════════════════════════════════════════════════════════════════

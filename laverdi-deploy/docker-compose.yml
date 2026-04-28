@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  command-center:
+    build:
+      context: ./command-center
+      dockerfile: Dockerfile
+    container_name: command-center
+    ports:
+      - "5000:5000"
+    environment:
+      COMMAND_CENTER_URL: "http://localhost:5000"
+      COMMAND_CENTER_PORT: "5000"
+    networks:
+      - laverdi-net
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  test-agent-1:
+    build:
+      context: ./test-agent
+      dockerfile: Dockerfile
+    container_name: test-agent-1
+    ports:
+      - "5001:5001"
+    environment:
+      AGENT_ID: "test-agent-1"
+      COMMAND_CENTER_URL: "http://command-center:5000"
+      AGENT_HOST: "test-agent-1"
+      AGENT_PORT: "5001"
+    networks:
+      - laverdi-net
+    restart: unless-stopped
+    depends_on:
+      command-center:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  test-agent-2:
+    build:
+      context: ./test-agent
+      dockerfile: Dockerfile
+    container_name: test-agent-2
+    ports:
+      - "5002:5002"
+    environment:
+      AGENT_ID: "test-agent-2"
+      COMMAND_CENTER_URL: "http://command-center:5000"
+      AGENT_HOST: "test-agent-2"
+      AGENT_PORT: "5002"
+    networks:
+      - laverdi-net
+    restart: unless-stopped
+    depends_on:
+      command-center:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  laverdi-net:
+    external: true

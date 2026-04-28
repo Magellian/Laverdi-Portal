@@ -1,0 +1,246 @@
+================================================================================
+SUPABASE RLS POLICY UPDATE - SUMMARY
+================================================================================
+
+PROJECT: dcvrkpgvxqdcboostkpz (Laverdi Portal)
+DATE: 2026-04-17
+STATUS: ✅ READY FOR EXECUTION
+
+================================================================================
+QUICK START (5 MINUTES)
+================================================================================
+
+1. Go to: https://app.supabase.com/project/dcvrkpgvxqdcboostkpz/sql/new
+2. Click "+ New Query"
+3. Copy: SUPABASE_RLS_POLICY_UPDATE.sql (entire file)
+4. Paste into editor
+5. Click "Run"
+6. Done! ✅
+
+Expected result: 21 policies created with "TO authenticated" clauses
+
+================================================================================
+WHAT'S BEING DONE
+================================================================================
+
+Adding explicit "TO authenticated" clauses to ALL RLS policies for:
+- users
+- profiles
+- api_keys
+- subscriptions
+- usage_logs
+
+This fixes PKCE authentication flow compatibility.
+
+================================================================================
+POLICIES BEING CREATED (21 TOTAL)
+================================================================================
+
+USERS TABLE (5 policies)
+  • allow_read_own_user → SELECT, authenticated, WHERE auth.uid() = id
+  • allow_insert_own_user → INSERT, authenticated, WHERE auth.uid() = id
+  • allow_update_own_user → UPDATE, authenticated, WHERE auth.uid() = id
+  • deny_delete_own_user → DELETE, authenticated, DENIED
+  • deny_anon_users → ALL, anon/public, DENIED
+
+PROFILES TABLE (5 policies)
+  • allow_read_own_profile → SELECT, authenticated, WHERE auth.uid() = user_id
+  • allow_insert_own_profile → INSERT, authenticated, WHERE auth.uid() = user_id
+  • allow_update_own_profile → UPDATE, authenticated, WHERE auth.uid() = user_id
+  • allow_delete_own_profile → DELETE, authenticated, WHERE auth.uid() = user_id
+  • deny_anon_profiles → ALL, anon/public, DENIED
+
+API_KEYS TABLE (5 policies)
+  • allow_read_own_api_keys → SELECT, authenticated, WHERE auth.uid() = user_id
+  • allow_insert_own_api_keys → INSERT, authenticated, WHERE auth.uid() = user_id
+  • allow_update_own_api_keys → UPDATE, authenticated, WHERE auth.uid() = user_id
+  • allow_delete_own_api_keys → DELETE, authenticated, WHERE auth.uid() = user_id
+  • deny_anon_api_keys → ALL, anon/public, DENIED
+
+SUBSCRIPTIONS TABLE (4 policies)
+  • allow_read_own_subscriptions → SELECT, authenticated, WHERE auth.uid() = user_id
+  • allow_insert_own_subscriptions → INSERT, authenticated, WHERE auth.uid() = user_id
+  • allow_update_own_subscriptions → UPDATE, authenticated, WHERE auth.uid() = user_id
+  • deny_anon_subscriptions → ALL, anon/public, DENIED
+
+USAGE_LOGS TABLE (2 policies)
+  • allow_read_own_usage_logs → SELECT, authenticated, WHERE auth.uid() = user_id
+  • deny_anon_usage_logs → ALL, anon/public, DENIED
+
+================================================================================
+ACCESS CONTROL SUMMARY
+================================================================================
+
+AUTHENTICATED USERS:
+  ✅ Can read only their own rows
+  ✅ Can create only their own records
+  ✅ Can update only their own records
+  ✅ Can delete only their own records (except users table)
+
+SERVICE ROLE (Backend/Admin):
+  ✅ Can bypass all RLS
+  ✅ Can see all rows
+  ✅ Can perform any operation
+
+ANONYMOUS USERS:
+  ❌ Explicitly denied all access
+  ❌ Cannot read
+  ❌ Cannot write
+  ❌ Cannot modify
+
+================================================================================
+VERIFICATION AFTER EXECUTION
+================================================================================
+
+1. Run verification query (in script)
+   → Should show 21 policies
+   → All with "authenticated" role
+
+2. Test as authenticated user:
+   SELECT * FROM users WHERE auth.uid() = id;
+   → Should return 1 row (own user)
+
+3. Test anon access:
+   SELECT * FROM users;
+   → Should fail or return empty (access denied)
+
+4. Test in application:
+   → PKCE flow should work
+   → Users see only their data
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+"Policy already exists" error:
+  → This is OK, policies are already created
+  → Just verify they have "TO authenticated" clause
+
+"Permission denied" error:
+  → You need admin/owner role on Supabase project
+  → Ask project owner for permissions
+
+"Table does not exist" error:
+  → Run database migrations to create tables
+  → Check if tables exist in Supabase dashboard
+
+RLS not enforcing:
+  → Enable RLS: ALTER TABLE {table} ENABLE ROW LEVEL SECURITY;
+  → Verify policies exist with verification query
+
+================================================================================
+FILES PROVIDED
+================================================================================
+
+1. SUPABASE_RLS_POLICY_UPDATE.sql
+   → Complete SQL script ready to run
+   → Copy and paste into Supabase SQL Editor
+
+2. SUPABASE_RLS_POLICY_UPDATE_GUIDE.md
+   → Detailed step-by-step instructions
+   → Includes troubleshooting and testing
+
+3. RLS_POLICY_CHECKLIST.md
+   → Quick reference checklist
+   → Pre-execution, execution, and post-execution steps
+
+4. update_rls_policies.py
+   → Python utility for future automation
+   → Can be used to manage policies programmatically
+
+5. RLS_POLICIES_SUMMARY.txt
+   → This file - quick overview
+
+6. 2026-04-17-rls-policies-update.md
+   → Detailed task completion report
+
+================================================================================
+RISK ASSESSMENT
+================================================================================
+
+Risk Level: LOW 🟢
+
+Why Low Risk:
+  ✅ No data is modified
+  ✅ Changes are reversible
+  ✅ Comprehensive rollback plan provided
+  ✅ Read-only verification first
+  ✅ Explicit safety measures (DENY anon)
+
+Rollback (if needed):
+  1. Drop policies: DROP POLICY IF EXISTS "policy_name" ON table_name;
+  2. Recreate old ones or run script again
+  3. Contact support if issues
+
+================================================================================
+SUCCESS CRITERIA
+================================================================================
+
+✅ All 21 policies created successfully
+✅ Each policy has "TO authenticated" clause
+✅ Users can access only their own rows
+✅ Service role can bypass RLS
+✅ Anon/public access explicitly denied
+✅ PKCE authentication flow works
+✅ Verification queries pass
+✅ No errors in application logs
+
+================================================================================
+NEXT STEPS AFTER EXECUTION
+================================================================================
+
+1. Run verification query (provided in SQL script)
+2. Test PKCE flow in application
+3. Monitor error logs for RLS issues
+4. Update API documentation
+5. Notify backend team
+6. Have rollback plan ready
+
+================================================================================
+IMPORTANT NOTES
+================================================================================
+
+• Explicit "TO authenticated" clauses are REQUIRED for PKCE compatibility
+• Service role bypass is used for admin operations and webhooks
+• All tables have RLS enabled for security
+• Anon/public access is EXPLICITLY denied (not implicit)
+• User data isolation is enforced via WHERE auth.uid() = user_id
+
+================================================================================
+TIME ESTIMATE
+================================================================================
+
+Execution: 5-10 minutes
+Verification: 2-5 minutes
+Testing: 5-10 minutes
+Total: 10-25 minutes
+
+================================================================================
+CONTACT / HELP
+================================================================================
+
+For detailed instructions:
+  → See: SUPABASE_RLS_POLICY_UPDATE_GUIDE.md
+
+For execution checklist:
+  → See: RLS_POLICY_CHECKLIST.md
+
+For troubleshooting:
+  → See: SUPABASE_RLS_POLICY_UPDATE_GUIDE.md (Troubleshooting section)
+  → Check Supabase docs: https://supabase.com/docs/guides/auth/row-level-security
+
+For SQL questions:
+  → Review: SUPABASE_RLS_POLICY_UPDATE.sql (well-commented)
+
+================================================================================
+STATUS: ✅ READY FOR EXECUTION
+================================================================================
+
+All files are prepared and ready. The SQL script can be executed immediately
+in the Supabase dashboard. No additional setup required.
+
+Prepared: 2026-04-17
+Task: Complete
+Ready: Yes ✅
+
+================================================================================

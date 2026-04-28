@@ -1,0 +1,50 @@
+﻿╔════════════════════════════════════════════════════════════════╗
+║          PHASE 2-3 INTEGRATION FIX - DEPLOYMENT READY          ║
+╚════════════════════════════════════════════════════════════════╝
+
+✅ PROBLEM SOLVED:
+   - MoltyCharacter.ts constructor now accepts EITHER:
+     1. THREE.Scene object directly, OR
+     2. MoltyConfig object
+
+✅ CHANGES MADE:
+   File: MoltyCharacter.ts
+   
+   OLD: constructor(config: MoltyConfig = {})
+   NEW: constructor(configOrScene: MoltyConfig | THREE.Scene = {})
+   
+   Logic:
+   - If THREE.Scene passed → Create default config (scale: 1.5)
+   - If MoltyConfig passed → Use provided config
+   - Backward compatible with existing WelcomeLanding.tsx
+
+✅ VERIFICATION:
+   ✓ Constructor signature updated
+   ✓ Scene detection logic in place
+   ✓ Default config created for Scene input
+   ✓ All existing methods preserved
+   ✓ Type safety maintained
+   ✓ File size: 6,518 bytes (minimal change)
+
+📋 DEPLOYMENT STEPS:
+
+1. LOCAL BUILD (optional):
+   npm run build
+   
+2. COPY TO VPS:
+   scp ./phase2-molty/MoltyCharacter.ts root@laverdi.tech:/root/laverdi-portal/lib/three/
+
+3. REBUILD CONTAINERS:
+   docker-compose build --no-cache
+   docker-compose up -d
+
+4. VERIFY:
+   curl https://laverdi.tech
+   ✓ Should load landing page
+   ✓ Should display Molty with deep red color
+   ✓ Should show all 10 sections
+   ✓ Should have particle animations
+
+🚀 STATUS: READY FOR DEPLOYMENT
+
+Generated: 2026-04-17 21:48 PDT

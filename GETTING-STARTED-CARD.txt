@@ -1,0 +1,163 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║               🚀 LAVERDI OPENCLAW - GETTING STARTED IN 5 MINUTES           ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ STEP 1: DOWNLOAD COMPANION APP (2 min)                                   │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  🔗 https://github.com/openclaw/openclaw/releases                       │
+│                                                                          │
+│  ✓ Choose your OS (macOS / Windows / Linux)                             │
+│  ✓ Download latest version                                              │
+│  ✓ Install like any other app                                           │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ STEP 2: CONNECT MESSAGING CHANNEL (2 min)                                │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  EASIEST: TELEGRAM ⭐                                                    │
+│  ├─ Open Telegram, search @BotFather                                    │
+│  ├─ Send /newbot                                                        │
+│  ├─ Copy API token                                                      │
+│  ├─ Paste into OpenClaw settings                                        │
+│  └─ Send first message and approve pairing code                         │
+│                                                                          │
+│  OR: WHATSAPP                                                            │
+│  ├─ Scan QR code from OpenClaw                                          │
+│  ├─ Approve connection on phone                                         │
+│  └─ You're connected!                                                   │
+│                                                                          │
+│  OR: DISCORD                                                             │
+│  ├─ Create bot at https://discord.com/developers/applications           │
+│  ├─ Copy token to OpenClaw                                              │
+│  ├─ Invite to your server                                               │
+│  └─ You're connected!                                                   │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ STEP 3: SEND INTRODUCTION MESSAGE (1 min)                                │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  Send your bot a message like:                                          │
+│                                                                          │
+│  "Hi! I'm [your name]. I'm a [your role] working on [your project].    │
+│   I want to automate [your goal]. Please ask before sending emails."     │
+│                                                                          │
+│  Your assistant will remember this forever.                             │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ IMPORTANT: SAVE YOUR API KEY                                             │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  📧 Check your welcome email from: noreply@laverdi.tech                 │
+│                                                                          │
+│  ✅ Find your API key (looks like: sk-do-...)                           │
+│  ✅ Copy to password manager or safe location                           │
+│  ✅ Never share this key                                                │
+│  ✅ Treat it like a password                                            │
+│                                                                          │
+│  💾 Store in 1Password, Bitwarden, or similar                           │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ YOUR DASHBOARD                                                           │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  🌐 https://laverdi.tech/dashboard                                      │
+│                                                                          │
+│  ✓ View API usage                                                       │
+│  ✓ Manage API keys                                                      │
+│  ✓ Check instance status                                                │
+│  ✓ Manage your subscription                                             │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ NEXT: DOWNLOAD THE QUICK START GUIDE                                     │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  📄 Full guide (with project ideas, setup tips, troubleshooting)        │
+│                                                                          │
+│  Available in your welcome email or at:                                 │
+│  https://laverdi.tech/guide/quickstart                                  │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+╔════════════════════════════════════════════════════════════════════════════╗
+║                                                                            ║
+║  ⏱️  TOTAL TIME: 5 MINUTES                                                 ║
+║                                                                            ║
+║  🎯 YOUR ASSISTANT IS NOW READY TO USE!                                   ║
+║                                                                            ║
+║  What's next?                                                            ║
+║  ├─ Create SOUL.md (15 min) — Set personality & boundaries               ║
+║  ├─ Create HEARTBEAT.md (10 min) — Setup background monitoring          ║
+║  ├─ Schedule first cron job (5 min) — Daily briefing at 8 AM             ║
+║  └─ Install first skill (10 min) — Web search, email, etc.               ║
+║                                                                            ║
+║  See full checklist in: ONBOARDING-CHECKLIST.md                         ║
+║                                                                            ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ NEED HELP?                                                               │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  📧 support@laverdi.tech          For questions & setup help            │
+│  💬 Discord: https://discord.gg/clawd  Community help                   │
+│  📚 Docs: https://docs.openclaw.ai     Full documentation               │
+│  🛠️  Skills: https://clawhub.com       Browse 1000+ integrations        │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+┌──────────────────────────────────────────────────────────────────────────┐
+│ WHAT YOUR ASSISTANT CAN DO                                               │
+├──────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  📊 Automate trading & financial analysis                               │
+│  📧 Manage email & inbox intelligence                                   │
+│  🤖 Execute complex workflows                                           │
+│  🔍 Monitor systems 24/7 & alert you                                    │
+│  📱 Work via Telegram, WhatsApp, Discord                                │
+│  🧠 Learn your preferences & adapt                                      │
+│  🔌 Integrate with any API (Stripe, GitHub, Slack, etc.)               │
+│  ⏰ Schedule tasks (daily, weekly, monthly)                              │
+│  📈 Grow smarter with each interaction                                  │
+│                                                                          │
+└──────────────────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
+QUICK REFERENCE
+
+┌────────────────────────┬──────────────────────────────────────────────┐
+│ API Key                │ Check welcome email from noreply@laverdi.tech│
+│ Dashboard              │ https://laverdi.tech/dashboard               │
+│ Quick Start Guide      │ See welcome email (downloadable PDF)         │
+│ Support Email          │ support@laverdi.tech                         │
+│ Billing Questions      │ billing@laverdi.tech                         │
+│ Community              │ https://discord.gg/clawd                      │
+│ Skill Marketplace      │ https://clawhub.com                          │
+│ Documentation          │ https://docs.openclaw.ai                     │
+└────────────────────────┴──────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+
+YOUR ASSISTANT IS READY. 
+
+Start with Telegram for instant notifications.
+Build your first automation today.
+Join thousands of users automating their workflows.
+
+Welcome to LaVerdi! 🚀
+
+═══════════════════════════════════════════════════════════════════════════════

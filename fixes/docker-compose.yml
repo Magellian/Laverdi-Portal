@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laverdi-portal
+    network_mode: host
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SUPABASE_URL=https://dcvrkpgvxqdcboostkpz.supabase.co
+      - NEXT_PUBLIC_SUPABASE_ANON_KEY=REDACTED_SUPABASE_ANON_KEY
+      - SUPABASE_SERVICE_ROLE_KEY=REDACTED_SUPABASE_SERVICE_ROLE_KEY
+      - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_REDACTED_STRIPE_PUBLISHABLE
+      - STRIPE_SECRET_KEY=sk_test_REDACTED_STRIPE_SECRET
+      - STRIPE_WEBHOOK_SECRET=whsec_REDACTED_STRIPE_WEBHOOK
+      - SENDGRID_API_KEY=SG.REDACTED_SENDGRID_KEY
+      - SENDGRID_FROM_EMAIL=noreply@laverdi.tech
+      - SENDGRID_SUPPORT_EMAIL=support@laverdi.tech
+      - SENDGRID_BILLING_EMAIL=billing@laverdi.tech
+      - SENDGRID_NOTIFICATIONS_EMAIL=notifications@laverdi.tech
+      - EMAIL_ENABLED=true
+      - NEXT_PUBLIC_APP_URL=https://laverdi.tech
+      - VPS_API_URL=http://127.0.0.1:8000
+      - VPS_ADMIN_TOKEN=change-me-in-production
+      - DO_CALLBACK_SECRET=laverdi-webhook-secret-change-me
+      - CRON_SECRET=laverdi-cron-secret-change-me
+    restart: unless-stopped
+    volumes:
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

@@ -1,0 +1,17 @@
+FROM laverdi-openclaw:latest
+
+# Install Chromium and dependencies for headless browser automation
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    dbus \
+    && rm -rf /var/cache/apk/*
+
+# Set environment variables for Chromium
+ENV CHROME_BIN=/usr/bin/chromium-browser
+ENV CHROMIUM_FLAGS="--no-sandbox --disable-gpu --disable-dev-shm-usage --headless"
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser

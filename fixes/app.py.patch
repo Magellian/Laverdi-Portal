@@ -1,0 +1,2 @@
+--- Fix: Change port mapping from 8700 to 18789 (OpenClaw default gateway port)
+--- In app.py, find the container creation line and change the ports dict
