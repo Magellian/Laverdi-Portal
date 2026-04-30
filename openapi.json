@@ -1,0 +1,875 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Laverdi Portal API",
+    "description": "RESTful API for the Laverdi.tech SaaS portal with authentication, admin management, Stripe integration, and webhook support.",
+    "version": "1.0.0",
+    "contact": {
+      "name": "Laverdi Support",
+      "url": "https://laverdi.tech/support"
+    },
+    "license": {
+      "name": "Proprietary"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.laverdi.tech",
+      "description": "Production server"
+    },
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "Bearer token for API authentication. Obtain via PKCE OAuth flow."
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": ["error"],
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "details": {
+            "type": "string",
+            "description": "Additional error details"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "User unique identifier"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "User email address"
+          },
+          "tier": {
+            "type": "string",
+            "enum": ["starter", "pro", "enterprise"],
+            "description": "Subscription tier"
+          },
+          "api_key": {
+            "type": "string",
+            "pattern": "^lav_[a-zA-Z0-9]{32}$",
+            "description": "User API key (only visible on creation)"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ApiKey": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Human-readable name for the API key"
+          },
+          "key": {
+            "type": "string",
+            "pattern": "^lav_[a-zA-Z0-9]{32}$",
+            "description": "The actual API key (only shown on creation)"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["active", "revoked"],
+            "default": "active"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "BillingStats": {
+        "type": "object",
+        "properties": {
+          "total_paid_ytd": {
+            "type": "number",
+            "description": "Total amount paid year-to-date in cents"
+          },
+          "next_billing_date": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Next scheduled billing date"
+          },
+          "invoices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "number": {
+                  "type": "string"
+                },
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "amount": {
+                  "type": "number",
+                  "description": "Amount in cents"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["paid", "pending", "failed"]
+                },
+                "paid_date": {
+                  "type": "string",
+                  "format": "date-time",
+                  "nullable": true
+                }
+              }
+            }
+          }
+        }
+      },
+      "AdminStats": {
+        "type": "object",
+        "properties": {
+          "totalUsers": {
+            "type": "integer",
+            "description": "Total number of registered users"
+          },
+          "activeSubscriptions": {
+            "type": "integer",
+            "description": "Number of active subscriptions"
+          },
+          "estimatedMRR": {
+            "type": "number",
+            "description": "Estimated Monthly Recurring Revenue"
+          },
+          "totalRequests": {
+            "type": "integer",
+            "description": "Total API requests in last 30 days"
+          },
+          "avgRequestsPerDay": {
+            "type": "integer",
+            "description": "Average requests per day (last 30 days)"
+          }
+        }
+      },
+      "CheckoutSession": {
+        "type": "object",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Stripe checkout session ID"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Stripe checkout URL"
+          }
+        }
+      },
+      "Instance": {
+        "type": "object",
+        "properties": {
+          "user_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["provisioning", "ready", "failed"]
+          },
+          "ip_address": {
+            "type": "string",
+            "format": "ipv4"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "responses": {
+      "Unauthorized": {
+        "description": "Authentication required or token invalid",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Access denied to requested resource",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Resource not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "BadRequest": {
+        "description": "Invalid request parameters",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "RateLimited": {
+        "description": "Rate limit exceeded",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        },
+        "headers": {
+          "X-RateLimit-Remaining": {
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Number of remaining API calls this month"
+          }
+        }
+      },
+      "ServerError": {
+        "description": "Internal server error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "paths": {
+    "/api/auth/callback": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Auth callback - Create user profile after OAuth",
+        "description": "Called after successful OAuth authentication to initialize user profile with API key",
+        "operationId": "authCallback",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email", "user_id"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "user_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile created or already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/auth/create-profile": {
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Create user profile",
+        "description": "Create a new user profile with generated API key",
+        "operationId": "createProfile",
+        "security": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["userId", "email"],
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Profile created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "apiKey": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/admin/api-keys": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Create new API key",
+        "description": "Generate a new API key for authenticated user",
+        "operationId": "createApiKey",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["user_id", "name"],
+                "properties": {
+                  "user_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "User ID (must match authenticated user)"
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 100,
+                    "description": "Human-readable name for the key"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "API key created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiKey"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "429": {
+            "$ref": "#/components/responses/RateLimited"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/admin/billing-stats": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Get billing statistics",
+        "description": "Retrieve billing information including YTD payments and invoice history",
+        "operationId": "getBillingStats",
+        "responses": {
+          "200": {
+            "description": "Billing statistics retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingStats"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/admin/stats": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "Get admin dashboard statistics",
+        "description": "Retrieve aggregated stats for admin dashboard (users, subscriptions, MRR, requests)",
+        "operationId": "getAdminStats",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Admin statistics retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminStats"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/admin/users": {
+      "get": {
+        "tags": ["Admin"],
+        "summary": "List all users",
+        "description": "Retrieve list of all users with subscription details (admin only)",
+        "operationId": "getUsers",
+        "security": [],
+        "responses": {
+          "200": {
+            "description": "Users retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/admin/delete-account": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Delete user account",
+        "description": "Permanently delete authenticated user account and all associated data (requires password confirmation)",
+        "operationId": "deleteAccount",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["password"],
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "format": "password",
+                    "description": "User password for confirmation"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Account deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "description": "Unauthorized - invalid password",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/admin/update-settings": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Update user settings",
+        "description": "Update user preferences, email, or request email change verification",
+        "operationId": "updateSettings",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": ["update_email", "verify_email", "update_preferences"],
+                    "description": "Type of settings update"
+                  },
+                  "new_email": {
+                    "type": "string",
+                    "format": "email",
+                    "description": "New email address (for update_email action)"
+                  },
+                  "code": {
+                    "type": "string",
+                    "description": "Verification code (for verify_email action)"
+                  },
+                  "preferences": {
+                    "type": "object",
+                    "description": "User preferences object (for update_preferences action)"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Settings updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/stripe/checkout": {
+      "post": {
+        "tags": ["Stripe"],
+        "summary": "Create Stripe checkout session",
+        "description": "Initiate a Stripe checkout session for subscription purchase",
+        "operationId": "createCheckoutSession",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["planId"],
+                "properties": {
+                  "planId": {
+                    "type": "string",
+                    "description": "Stripe price ID or plan identifier"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Checkout session created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckoutSession"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/webhooks/stripe": {
+      "post": {
+        "tags": ["Webhooks"],
+        "summary": "Stripe webhook receiver",
+        "description": "Webhook endpoint for Stripe events (checkout.session.completed, subscription updates/cancellations)",
+        "operationId": "stripeWebhook",
+        "security": [],
+        "parameters": [
+          {
+            "name": "stripe-signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Stripe webhook signature for verification"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "description": "Stripe event object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook received and processed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "received": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid webhook signature",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    },
+    "/api/webhooks/do-callback": {
+      "post": {
+        "tags": ["Webhooks"],
+        "summary": "DigitalOcean droplet provisioning callback",
+        "description": "Webhook endpoint called when DigitalOcean droplet provisioning completes",
+        "operationId": "doCallback",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^Bearer .+$"
+            },
+            "description": "Bearer token with DO_CALLBACK_SECRET"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["user_id", "droplet_ip"],
+                "properties": {
+                  "user_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "droplet_ip": {
+                    "type": "string",
+                    "format": "ipv4",
+                    "description": "IP address of provisioned droplet"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": ["ready", "failed"],
+                    "default": "ready"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Callback processed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/ServerError"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "User authentication and profile initialization"
+    },
+    {
+      "name": "Admin",
+      "description": "Admin endpoints for account management, API keys, billing, and statistics"
+    },
+    {
+      "name": "Stripe",
+      "description": "Payment and subscription management endpoints"
+    },
+    {
+      "name": "Webhooks",
+      "description": "Webhook receivers for external service events"
+    }
+  ]
+}

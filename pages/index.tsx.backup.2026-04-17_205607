@@ -1,0 +1,397 @@
+import React, { useEffect, useRef } from 'react'
+import Head from 'next/head'
+import Link from 'next/link'
+import dynamic from 'next/dynamic'
+import gsap from 'gsap'
+import { ScrollTrigger } from 'gsap/dist/ScrollTrigger'
+import Navbar from '@/components/Navbar'
+import Footer from '@/components/Footer'
+
+// Dynamically load the Three.js scene so it only runs on the client
+const LandingHeroScene = dynamic(() => import('@/components/LandingHeroScene'), { ssr: false })
+
+gsap.registerPlugin(ScrollTrigger)
+
+interface FeatureCard {
+  icon: string
+  title: string
+  description: string
+}
+
+const FEATURES: FeatureCard[] = [
+  {
+    icon: '⚡',
+    title: 'AI-Powered Automation',
+    description: 'Let Molty learn your workflows and automate repetitive tasks across all your tools.'
+  },
+  {
+    icon: '🔗',
+    title: 'Universal Integration',
+    description: 'Connect Email, Calendar, Drive, Slack, and 50+ tools into one intelligent system.'
+  },
+  {
+    icon: '🎯',
+    title: 'Smart Monitoring',
+    description: 'Real-time insights into your workflow health with predictive alerts and optimization.'
+  },
+  {
+    icon: '🛡️',
+    title: 'Enterprise Security',
+    description: 'End-to-end encryption, SOC 2 compliance, and granular permission controls.'
+  }
+]
+
+export default function Home() {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const heroTextRef = useRef<HTMLDivElement>(null)
+  const problemSectionRef = useRef<HTMLDivElement>(null)
+  const solutionSectionRef = useRef<HTMLDivElement>(null)
+  const featureSectionRef = useRef<HTMLDivElement>(null)
+  const ctaSectionRef = useRef<HTMLDivElement>(null)
+  const scrollIndicatorRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    // Create scroll animations timeline
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: 'top top',
+        end: 'bottom bottom',
+        scrub: 0.5,
+        markers: false
+      }
+    })
+
+    // Hero section animations
+    if (heroTextRef.current) {
+      gsap.from(heroTextRef.current.querySelector('.hero-title'), {
+        opacity: 0,
+        y: 100,
+        duration: 1,
+        delay: 0.3
+      })
+
+      gsap.from(heroTextRef.current.querySelector('.hero-subtitle'), {
+        opacity: 0,
+        y: 100,
+        duration: 1,
+        delay: 0.6
+      })
+    }
+
+    // Scroll indicator animation
+    if (scrollIndicatorRef.current) {
+      gsap.to(scrollIndicatorRef.current, {
+        y: 10,
+        opacity: 0.3,
+        duration: 1.5,
+        repeat: -1,
+        yoyo: true
+      })
+    }
+
+    // Problem section scroll reveal
+    if (problemSectionRef.current) {
+      const problemElements = problemSectionRef.current.querySelectorAll('.problem-item')
+      problemElements.forEach((el, i) => {
+        gsap.from(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse'
+          },
+          opacity: 0,
+          x: -50,
+          duration: 0.8,
+          delay: i * 0.1
+        })
+      })
+    }
+
+    // Solution section animations
+    if (solutionSectionRef.current) {
+      gsap.from(solutionSectionRef.current.querySelector('.solution-text'), {
+        scrollTrigger: {
+          trigger: solutionSectionRef.current,
+          start: 'top 70%',
+          toggleActions: 'play none none reverse'
+        },
+        opacity: 0,
+        y: 60,
+        duration: 1
+      })
+    }
+
+    // Feature cards stagger animation
+    if (featureSectionRef.current) {
+      const cards = featureSectionRef.current.querySelectorAll('.feature-card')
+      gsap.from(cards, {
+        scrollTrigger: {
+          trigger: featureSectionRef.current,
+          start: 'top 70%',
+          toggleActions: 'play none none reverse'
+        },
+        opacity: 0,
+        y: 60,
+        stagger: 0.15,
+        duration: 0.8
+      })
+    }
+
+    // CTA section animation
+    if (ctaSectionRef.current) {
+      gsap.from(ctaSectionRef.current.querySelector('.cta-content'), {
+        scrollTrigger: {
+          trigger: ctaSectionRef.current,
+          start: 'top 70%',
+          toggleActions: 'play none none reverse'
+        },
+        opacity: 0,
+        scale: 0.95,
+        duration: 1
+      })
+    }
+
+    return () => {
+      ScrollTrigger.getAll().forEach(t => t.kill())
+    }
+  }, [])
+
+  return (
+    <>
+      <Head>
+        <title>Laverdi Portal | Automation with Soul</title>
+        <meta name="description" content="Meet Molty - the pulse that connects your entire workflow. Transform isolated tools into a single, intelligent ecosystem." />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta property="og:title" content="Laverdi Portal | Automation with Soul" />
+        <meta property="og:description" content="Turn isolated tools into a single, intelligent ecosystem." />
+      </Head>
+
+      <div ref={containerRef} className="relative bg-black text-white overflow-x-hidden">
+        {/* Fixed Hero Scene */}
+        <LandingHeroScene />
+
+        <Navbar />
+
+        {/* Hero Section */}
+        <section className="relative h-screen flex flex-col items-center justify-center px-6 pt-20 scroll-hero">
+          <div ref={heroTextRef} className="text-center max-w-4xl mx-auto z-10">
+            <h1 className="hero-title text-6xl md:text-7xl lg:text-8xl font-black mb-6 tracking-tighter">
+              <span className="text-[#ff3333]">Automation</span> with <span className="text-white">Soul</span>
+            </h1>
+            <p className="hero-subtitle text-xl md:text-2xl text-gray-300 leading-relaxed mb-8 max-w-3xl mx-auto">
+              Meet Molty. A digital heartbeat that transforms isolated tools into a single, intelligent ecosystem. 
+              Your workflows deserve better. They deserve <span className="glow-text">connection</span>.
+            </p>
+            <div className="flex gap-4 justify-center flex-wrap mt-12">
+              <Link 
+                href="/auth/signup"
+                className="px-8 py-4 bg-[#ff3333] text-white font-bold rounded-lg hover:bg-red-600 transition-all hover:scale-105 text-lg"
+              >
+                Start Your Journey
+              </Link>
+              <a 
+                href="#features"
+                className="px-8 py-4 border-2 border-[#ff3333] text-[#ff3333] font-bold rounded-lg hover:bg-[#ff3333] hover:text-black transition-all text-lg"
+              >
+                Learn More
+              </a>
+            </div>
+          </div>
+
+          {/* Scroll Down Indicator */}
+          <div ref={scrollIndicatorRef} className="absolute bottom-8 left-1/2 transform -translate-x-1/2 scroll-indicator">
+            <svg className="w-6 h-6 text-[#ff3333]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+            </svg>
+          </div>
+        </section>
+
+        {/* Problem Section */}
+        <section 
+          ref={problemSectionRef}
+          className="relative min-h-screen py-24 px-6 flex items-center bg-gradient-to-b from-black via-black to-black"
+        >
+          <div className="max-w-5xl mx-auto w-full">
+            <h2 className="text-5xl md:text-6xl font-black mb-16 tracking-tighter">
+              The <span className="text-[#ff3333]">Problem</span>
+            </h2>
+            
+            <div className="grid gap-8">
+              {[
+                {
+                  title: 'Tool Chaos',
+                  description: 'You juggle Email, Calendar, Drive, Slack, and a dozen other tools. Each one is disconnected from the others.'
+                },
+                {
+                  title: 'Manual Work Never Ends',
+                  description: 'Copy-pasting between apps. Updating spreadsheets. Sending notifications. Hours lost every week to busywork.'
+                },
+                {
+                  title: 'No Intelligence Across Systems',
+                  description: 'Your tools can\'t talk to each other. No insights. No optimization. Just isolated silos of data.'
+                },
+                {
+                  title: 'Scaling is a Nightmare',
+                  description: 'As your team grows, complexity explodes. Automation tools are expensive, hard to configure, and brittle.'
+                }
+              ].map((item, idx) => (
+                <div key={idx} className="problem-item bg-gradient-to-r from-gray-900/30 to-transparent border-l-2 border-[#ff3333] pl-8 py-6">
+                  <h3 className="text-2xl font-bold mb-2">{item.title}</h3>
+                  <p className="text-gray-400 text-lg">{item.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Solution Section */}
+        <section 
+          ref={solutionSectionRef}
+          className="relative min-h-screen py-24 px-6 flex items-center bg-black"
+        >
+          <div className="max-w-5xl mx-auto w-full">
+            <div className="solution-text">
+              <h2 className="text-5xl md:text-6xl font-black mb-8 tracking-tighter">
+                <span className="text-white">We </span><span className="text-[#ff3333]">Connect</span> <span className="text-white">Everything</span>
+              </h2>
+              
+              <p className="text-2xl text-gray-300 leading-relaxed mb-8 max-w-3xl">
+                Molty isn't just another automation tool. It's the <strong>heartbeat</strong> of your workflow ecosystem.
+              </p>
+
+              <div className="space-y-6 max-w-3xl">
+                <div className="flex gap-6 items-start">
+                  <div className="text-4xl flex-shrink-0">🧠</div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">AI-Powered Understanding</h3>
+                    <p className="text-gray-400">Molty learns your patterns, understands intent, and creates automations that feel natural—not robotic.</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-6 items-start">
+                  <div className="text-4xl flex-shrink-0">🔗</div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">Universal Integration</h3>
+                    <p className="text-gray-400">Email, Calendar, Drive, Slack, CRM, ERP, custom APIs—Molty connects them all with zero setup pain.</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-6 items-start">
+                  <div className="text-4xl flex-shrink-0">⚡</div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">Instant Productivity Gains</h3>
+                    <p className="text-gray-400">See results in hours, not months. Deploy workflows in minutes. Scale without friction.</p>
+                  </div>
+                </div>
+
+                <div className="flex gap-6 items-start">
+                  <div className="text-4xl flex-shrink-0">💎</div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">Your Data, Your Rules</h3>
+                    <p className="text-gray-400">Enterprise-grade encryption. Full compliance. Audit trails. Molty respects your privacy like we'd respect our own.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section 
+          id="features"
+          ref={featureSectionRef}
+          className="relative min-h-screen py-24 px-6 flex items-center bg-gradient-to-b from-black via-gray-900/10 to-black"
+        >
+          <div className="max-w-6xl mx-auto w-full">
+            <h2 className="text-5xl md:text-6xl font-black mb-4 text-center tracking-tighter">
+              Powerful <span className="text-[#ff3333]">Features</span>
+            </h2>
+            <p className="text-center text-gray-400 text-xl mb-16 max-w-3xl mx-auto">
+              Everything you need to transform your workflow
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {FEATURES.map((feature, idx) => (
+                <div 
+                  key={idx}
+                  className="feature-card group"
+                >
+                  <div className="text-5xl mb-6 group-hover:scale-110 transition-transform duration-300">
+                    {feature.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
+                  <p className="text-gray-400 text-lg">{feature.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section 
+          ref={ctaSectionRef}
+          className="relative min-h-screen py-24 px-6 flex items-center bg-black"
+        >
+          <div className="cta-content max-w-4xl mx-auto w-full text-center">
+            <h2 className="text-5xl md:text-6xl font-black mb-8 tracking-tighter">
+              Ready to Transform Your Workflow?
+            </h2>
+            <p className="text-xl text-gray-400 mb-12 max-w-2xl mx-auto">
+              Join hundreds of teams already using Molty to reclaim hours every week. Start free. No credit card required.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <Link 
+                href="/auth/signup"
+                className="px-10 py-4 bg-[#ff3333] text-white font-bold rounded-lg hover:bg-red-600 transition-all hover:scale-105 text-lg w-full sm:w-auto"
+              >
+                Start Free Trial
+              </Link>
+              <a 
+                href="mailto:support@laverdi.tech"
+                className="px-10 py-4 border-2 border-[#ff3333] text-[#ff3333] font-bold rounded-lg hover:bg-[#ff3333] hover:text-black transition-all text-lg w-full sm:w-auto"
+              >
+                Talk to Us
+              </a>
+            </div>
+
+            {/* Waitlist signup */}
+            <div className="mt-16 bg-gray-900/30 border border-gray-800 rounded-xl p-8 max-w-md mx-auto">
+              <h3 className="text-xl font-bold mb-4">Join the Waitlist</h3>
+              <div className="flex gap-2">
+                <input 
+                  type="email"
+                  placeholder="you@example.com"
+                  className="flex-1 px-4 py-3 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ff3333]"
+                />
+                <button className="px-6 py-3 bg-[#ff3333] text-white font-bold rounded-lg hover:bg-red-600 transition-colors">
+                  Notify Me
+                </button>
+              </div>
+              <p className="text-gray-500 text-sm mt-3">We'll let you know when new features launch.</p>
+            </div>
+          </div>
+        </section>
+
+        {/* Trust Section */}
+        <section className="py-16 px-6 bg-gradient-to-b from-black to-gray-900/50 border-t border-gray-800">
+          <div className="max-w-6xl mx-auto text-center">
+            <p className="text-gray-400 text-lg mb-8">Trusted by forward-thinking teams</p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center">
+              {['Fortune 500', 'Startups', 'Agencies', 'Enterprises'].map((item, idx) => (
+                <div key={idx} className="text-gray-500 font-semibold">
+                  {item}
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <Footer />
+      </div>
+    </>
+  )
+}

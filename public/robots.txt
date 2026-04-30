@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and private paths
+Disallow: /admin
+Disallow: /dashboard
+Disallow: /api
+
+Sitemap: https://laverdi.tech/sitemap.xml
