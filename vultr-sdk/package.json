@@ -1,0 +1,35 @@
+{
+  "name": "@laverdi/vultr-sdk",
+  "version": "1.0.0",
+  "description": "TypeScript SDK and CLI for Vultr inference API",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "vultr": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "test": "node --experimental-vm-modules node_modules/.bin/jest",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": ["vultr", "inference", "llm", "sdk", "cli", "openai"],
+  "author": "LaVerdi",
+  "license": "MIT",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "openai": "^4.56.0",
+    "ora": "^8.1.0",
+    "conf": "^13.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

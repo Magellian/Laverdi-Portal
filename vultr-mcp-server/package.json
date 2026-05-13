@@ -1,0 +1,31 @@
+{
+  "name": "@laverdi/vultr-mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server exposing Vultr inference models as OpenClaw tools",
+  "main": "dist/index.js",
+  "bin": {
+    "vultr-mcp": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node src/index.ts",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": ["mcp", "vultr", "inference", "openclaw", "llm"],
+  "author": "LaVerdi",
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "openai": "^4.56.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

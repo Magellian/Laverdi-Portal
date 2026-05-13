@@ -1,0 +1,321 @@
+{
+  "version": 1,
+  "updatedAt": "2026-04-10T18:42:31.411Z",
+  "entries": {
+    "memory:memory/2026-03-28.md:27:66": {
+      "key": "memory:memory/2026-03-28.md:27:66",
+      "path": "memory/2026-03-28.md",
+      "startLine": 27,
+      "endLine": 66,
+      "source": "memory",
+      "snippet": "- Account Value: $200.00 (all cash, no open positions) - Exchange: Kraken - Bot Status: Live and syncing ### Keys Location - Kraken API keys: `src/trading-bridge/.env` (KRAKEN_API_KEY, KRAKEN_API_SECRET) - Same file has ANTHROPIC_API_KEY for the AI risk manager ### Existing Infrastructure (already built, in src/trading-bridge/main.py) - FastAPI webhook receiver on port 8000 - TradingView webhook → Kraken execution bridge - Claude Haiku AI risk manager gate (reads crypto news, APPROVE/DENY trades) - DRY_RUN = True safety switch - ccxt Kraken integration already working ### Next Steps (discussed, not started) 1. Connect bot + webhook — kraken_bot.py watches account, main.py fires trades 2.",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.7650274606317891,
+      "maxScore": 0.7650274606317891,
+      "firstRecalledAt": "2026-04-10T09:48:50.377Z",
+      "lastRecalledAt": "2026-04-10T09:48:50.377Z",
+      "queryHashes": [
+        "32e168c081ef"
+      ],
+      "recallDays": [
+        "2026-04-10"
+      ],
+      "conceptTags": [
+        "200.00",
+        "src/trading-bridge",
+        "kraken-api-key",
+        "kraken-api-secret",
+        "anthropic-api-key",
+        "src/trading-bridge/main.py",
+        "approve/deny",
+        "dry-run"
+      ]
+    },
+    "memory:memory/2026-03-28.md:1:35": {
+      "key": "memory:memory/2026-03-28.md:1:35",
+      "path": "memory/2026-03-28.md",
+      "startLine": 1,
+      "endLine": 35,
+      "source": "memory",
+      "snippet": "# 2026-03-28 ## Discussions - Chris sent a project plan for a production-grade Webhook-to-Exchange Trading Bridge to replace a brittle \"AI desktop agent\" concept. - The plan outlines 4 phases: Exchange Setup, Webhook Receiver, TradingView Integration, and an Optional AI Filter Layer. - Decision pending: Build via Python/FastAPI+CCXT (Infrastructure route) or an n8n workflow (No-code route). ## Progress - Created `memory/project-trading-bridge/README.md` to track the architecture and execution plan. --- ## Crypto Trader - Mission Control Tab (Session 2) ### What We Built - Added a **Crypto Trader tab** to Mission Control (`mission-control/index.html`) - Shows: Total Account Value, Avai",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.7615062456728492,
+      "maxScore": 0.7615062456728492,
+      "firstRecalledAt": "2026-04-10T09:48:50.377Z",
+      "lastRecalledAt": "2026-04-10T09:48:50.377Z",
+      "queryHashes": [
+        "32e168c081ef"
+      ],
+      "recallDays": [
+        "2026-04-10"
+      ],
+      "conceptTags": [
+        "production-grade",
+        "webhook-to-exchange",
+        "python/fastapi",
+        "no-code",
+        "mission-control/index.html",
+        "discussions",
+        "chris",
+        "sent"
+      ]
+    },
+    "memory:memory/2026-03-28.md:85:118": {
+      "key": "memory:memory/2026-03-28.md:85:118",
+      "path": "memory/2026-03-28.md",
+      "startLine": 85,
+      "endLine": 118,
+      "source": "memory",
+      "snippet": "| `plaid-pine` | Trading bridge (FastAPI, port 8000) | Background | | `tide-glade` | Signal engine (SMA9/21, BTC/USD 5m) | Background | | `young-nexus` | Mission Control HTTP server (port 8080) | Background | | Kraken bot | Account sync every 15s → crypto.json | Running separately | ### Key Files | File | Purpose | |------|---------| | `src/trading-bridge/main.py` | Webhook receiver + AI risk gate + Kraken executor | | `src/trading-bridge/signal_engine.py` | Kraken-native SMA crossover signal generator | | `mission-control/bots/kraken_bot.py` | Account state sync bot | | `mission-control/state/crypto.json` | Live state (written by bot, read by dashboard) | | `mission-control/index.html` | D",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.7611968490860765,
+      "maxScore": 0.7611968490860765,
+      "firstRecalledAt": "2026-04-10T09:48:50.377Z",
+      "lastRecalledAt": "2026-04-10T09:48:50.377Z",
+      "queryHashes": [
+        "32e168c081ef"
+      ],
+      "recallDays": [
+        "2026-04-10"
+      ],
+      "conceptTags": [
+        "plaid-pine",
+        "tide-glade",
+        "sma9/21",
+        "btc/usd",
+        "young-nexus",
+        "crypto.json",
+        "src/trading-bridge/main.py",
+        "kraken-native"
+      ]
+    },
+    "memory:memory/2026-03-19.md:1:25": {
+      "key": "memory:memory/2026-03-19.md:1:25",
+      "path": "memory/2026-03-19.md",
+      "startLine": 1,
+      "endLine": 25,
+      "source": "memory",
+      "snippet": "# 2026-03-19 ## Discussions - Chris named the assistant Crawford. - Established operating context: execution-first, direct, operator-style support. - Captured strategic shift away from Laverdi Vending and toward an AI receptionist / automation agency. - Immediate deployment focus: Retell AI receptionist for after-hours handling at Fife RV. - Communication preference: concise, actionable, structured, no fluff. - Chris asked to implement a daily journal memory system inspired by Alex's OpenClaw setup from a tutorial video. ## Decisions - Use `memory/YYYY-MM-DD.md` as a running daily journal for important discussions, decisions, progress, and follow-ups. - Keep `MEMORY.md` as the distilled lo",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.4896730691194534,
+      "maxScore": 0.4896730691194534,
+      "firstRecalledAt": "2026-04-10T17:16:23.627Z",
+      "lastRecalledAt": "2026-04-10T17:16:23.627Z",
+      "queryHashes": [
+        "8483ad9c7510"
+      ],
+      "recallDays": [
+        "2026-04-10"
+      ],
+      "conceptTags": [
+        "execution-first",
+        "operator-style",
+        "after-hours",
+        "memory/yyyy-mm-dd.md",
+        "follow-ups",
+        "memory.md",
+        "discussions",
+        "chris"
+      ]
+    },
+    "memory:memory/2026-04-01.md:104:151": {
+      "key": "memory:memory/2026-04-01.md:104:151",
+      "path": "memory/2026-04-01.md",
+      "startLine": 104,
+      "endLine": 151,
+      "source": "memory",
+      "snippet": "- Supabase: Test keys set, needs real keys for production - SendGrid: Optional, not configured (email features offline) - Stripe webhook: Test secret set, needs real account for live webhook testing --- ## Current Limitations & Known Issues 1. **npm audit:** 11 high severity vulnerabilities (non-critical, can update) 2. **Node.js 18:** Deprecated (Supabase recommends upgrade to Node 20) 3. **Auth/Stripe:** Not tested yet (portal loads, but flows untested) 4. **OpenAgent:** Stopped (in sleep mode, can restart if needed) --- ## What Works Now ✅ Portal loads at `https://laverdi.tech` ✅ No client-side errors ✅ All pages/routes accessible ✅ HTTPS with valid SSL cert ✅ Docker contain",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.9997664153575896,
+      "maxScore": 0.5202259629964828,
+      "firstRecalledAt": "2026-04-10T17:24:27.765Z",
+      "lastRecalledAt": "2026-04-10T18:42:31.411Z",
+      "queryHashes": [
+        "44e6979485ff",
+        "90d19e9afbbf"
+      ],
+      "recallDays": [
+        "2026-04-10"
+      ],
+      "conceptTags": [
+        "non-critical",
+        "node.js",
+        "auth/stripe",
+        "laverdi.tech",
+        "client-side",
+        "pages/routes",
+        "supabase",
+        "test"
+      ]
+    },
+    "memory:memory/2026-04-01.md:68:112": {
+      "key": "memory:memory/2026-04-01.md:68:112",
+      "path": "memory/2026-04-01.md",
+      "startLine": 68,
+      "endLine": 112,
+      "source": "memory",
+      "snippet": "- **nginx.conf location:** `/root/laverdi-portal/nginx.conf` (mounted to `/etc/nginx/conf.d/default.conf`) - **SSL certs:** `/etc/letsencrypt/live/laverdi.tech/` (fullchain.pem + privkey.pem) - **App code:** `/root/laverdi-portal/` (Next.js 14, Node 18-alpine) - **Env vars:** `.env.production` in laverdi-portal folder (Supabase + Stripe test keys configured) ### Pages & Routes **Live pages:** - `/` — Homepage (Laverdi.tech hero + pricing) - `/auth/login` — Sign in - `/auth/signup` — Sign up - `/dashboard` — User dashboard - `/dashboard/api-keys` — API key management - `/dashboard/billing` — Billing page - `/dashboard/subscription` — Subscription status - `/dashboard/settings` — User setting",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.997240176796913,
+      "maxScore": 0.5191996127367019,
+      "firstRecalledAt": "2026-04-10T17:24:27.765Z",
+      "lastRecalledAt": "2026-04-10T18:42:31.411Z",
+      "queryHashes": [
+        "44e6979485ff",
+        "90d19e9afbbf"
+      ],
+      "recallDays": [
+        "2026-04-10"
+      ],
+      "conceptTags": [
+        "nginx.conf",
+        "root/laverdi-portal/nginx.conf",
+        "etc/nginx/conf.d/default.conf",
+        "fullchain.pem",
+        "privkey.pem",
+        "root/laverdi-portal",
+        "next.js",
+        "18-alpine"
+      ]
+    },
+    "memory:memory/2026-04-01.md:1:39": {
+      "key": "memory:memory/2026-04-01.md:1:39",
+      "path": "memory/2026-04-01.md",
+      "startLine": 1,
+      "endLine": 39,
+      "source": "memory",
+      "snippet": "# 2026-04-01 — Laverdi Portal: Full Deployment & Production Fix ## Final Status ✅ **Portal is LIVE at `https://laverdi.tech`** — fully functional, no errors. --- ## Session Breakdown ### Phase 1: Initial Deployment (Early Session) - SSH key auth fixed (public key added via DigitalOcean console) - DNS: laverdi.tech → 64.23.142.154 (Gandi registrar) - HTTPS with Let's Encrypt cert (auto-renewal enabled, expires 2026-06-30) - Nginx SSL + HTTP→HTTPS redirect configured - Full Next.js app copied to VPS and built ### Phase 2: Client-Side Secret Key Vulnerability (Mid Session) - **Problem:** Stripe secret key exposed to browser (lib/stripe.ts imported by pages/index.tsx) - Caused: \"Error: M",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.9942883193492889,
+      "maxScore": 0.5166302949190139,
+      "firstRecalledAt": "2026-04-10T17:24:27.765Z",
+      "lastRecalledAt": "2026-04-10T18:42:31.411Z",
+      "queryHashes": [
+        "44e6979485ff",
+        "90d19e9afbbf"
+      ],
+      "recallDays": [
+        "2026-04-10"
+      ],
+      "conceptTags": [
+        "laverdi.tech",
+        "64.23.142.154",
+        "auto-renewal",
+        "next.js",
+        "client-side",
+        "lib/stripe.ts",
+        "pages/index.tsx",
+        "laverdi"
+      ]
+    },
+    "memory:memory/2026-04-01.md:145:168": {
+      "key": "memory:memory/2026-04-01.md:145:168",
+      "path": "memory/2026-04-01.md",
+      "startLine": 145,
+      "endLine": 168,
+      "source": "memory",
+      "snippet": "| **VPS** | 64.23.142.154 (DigitalOcean) | | **Domain** | laverdi.tech (Gandi) | | **SSH Key** | ED25519 at ~/.ssh/id_ed25519 | | **Containers** | laverdi-portal, laverdi-nginx | | **Network** | laverdi-network (docker bridge) | | **SSL Cert** | /etc/letsencrypt/live/laverdi.tech/ (auto-renew) | | **Portal Path** | /root/laverdi-portal | | **Port (HTTP)** | 80 → redirect to HTTPS | | **Port (HTTPS)** | 443 (nginx) → 3000 (Next.js) | --- ## Key Learnings 1. **Never import secret keys in client code** — Always separate lib files by execution context 2. **Nginx conf.d directives** — Can't use main-context directives (user, worker_processes) in included files 3. **Docker network hostnames** —",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.9943574339151382,
+      "maxScore": 0.5131143182516098,
+      "firstRecalledAt": "2026-04-10T17:24:27.765Z",
+      "lastRecalledAt": "2026-04-10T18:42:31.411Z",
+      "queryHashes": [
+        "44e6979485ff",
+        "90d19e9afbbf"
+      ],
+      "recallDays": [
+        "2026-04-10"
+      ],
+      "conceptTags": [
+        "network",
+        "64.23.142.154",
+        "laverdi.tech",
+        "ssh/id-ed25519",
+        "laverdi-portal",
+        "laverdi-nginx",
+        "laverdi-network",
+        "auto-renew"
+      ]
+    },
+    "memory:memory/2026-03-31.md:23:58": {
+      "key": "memory:memory/2026-03-31.md:23:58",
+      "path": "memory/2026-03-31.md",
+      "startLine": 23,
+      "endLine": 58,
+      "source": "memory",
+      "snippet": "- **Docker Build:** Started `docker-compose up -d` (building Next.js app in container) ### In Progress 🔄 - Docker build/start (estimated 3-5 mins from 23:05 PDT) - Waiting for containers to come online ### Next Steps 1. **Check Docker status:** ```bash docker ps docker logs laverdi-portal ``` 2. **Verify port 80 is live:** ```bash curl http://localhost ``` 3. **Point DNS:** Update laverdi.tech A record to 64.23.142.154 4. **SSL/HTTPS:** Set up Let's Encrypt cert (certbot in nginx container or add to compose) 5. **Full App Pages:** Copy remaining pages (auth, dashboard, billing, etc.) from workspace to VPS 6. **Test Stripe:** Trigger test subscription via portal 7. **M",
+      "recallCount": 2,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.9847733736038208,
+      "maxScore": 0.5091376751661301,
+      "firstRecalledAt": "2026-04-10T17:24:27.765Z",
+      "lastRecalledAt": "2026-04-10T18:42:31.411Z",
+      "queryHashes": [
+        "44e6979485ff",
+        "90d19e9afbbf"
+      ],
+      "recallDays": [
+        "2026-04-10"
+      ],
+      "conceptTags": [
+        "docker-compose",
+        "next.js",
+        "build/start",
+        "3-5",
+        "laverdi-portal",
+        "laverdi.tech",
+        "64.23.142.154",
+        "ssl/https"
+      ]
+    },
+    "memory:memory/2026-03-31.md:1:38": {
+      "key": "memory:memory/2026-03-31.md:1:38",
+      "path": "memory/2026-03-31.md",
+      "startLine": 1,
+      "endLine": 38,
+      "source": "memory",
+      "snippet": "# 2026-03-31 — Laverdi.tech Portal Deployment ## Session Summary ### Completed ✅ - **Supabase Migration:** Ran full schema (users, subscriptions, api_keys, usage_logs tables with RLS policies) - **Stripe Setup:** - Created webhook endpoint at `https://laverdi.tech/api/webhooks/stripe` - Obtained webhook secret: `whsec_REDACTED_STRIPE_WEBHOOK` - Configured test keys (publishable + secret) - **SSH Access:** Generated ED25519 key pair, added to DigitalOcean, confirmed SSH works - **VPS Portal Structure:** Created `/root/laverdi-portal` on VPS with: - `docker-compose.yml` (web + nginx services) - `.env` (all Supabase + Stripe credentials loaded) - `Dockerfile` (Node 18-al",
+      "recallCount": 1,
+      "dailyCount": 0,
+      "groundedCount": 0,
+      "totalScore": 0.46999652981758117,
+      "maxScore": 0.46999652981758117,
+      "firstRecalledAt": "2026-04-10T18:42:31.411Z",
+      "lastRecalledAt": "2026-04-10T18:42:31.411Z",
+      "queryHashes": [
+        "90d19e9afbbf"
+      ],
+      "recallDays": [
+        "2026-04-10"
+      ],
+      "conceptTags": [
+        "laverdi.tech",
+        "api-keys",
+        "usage-logs",
+        "laverdi.tech/api/webhooks/stripe",
+        "root/laverdi-portal",
+        "docker-compose.yml",
+        "18-al",
+        "portal"
+      ]
+    }
+  }
+}

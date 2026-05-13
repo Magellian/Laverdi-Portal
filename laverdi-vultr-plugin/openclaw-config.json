@@ -1,0 +1,14 @@
+{
+  "_comment": "Drop this into ~/.openclaw/config.json (or merge the mcpServers section)",
+  "mcpServers": {
+    "vultr": {
+      "command": "node",
+      "args": ["/opt/vultr-mcp-server/dist/index.js"],
+      "env": {
+        "VULTR_API_KEY": "sk-do-zJcFm__t2n7fAwomUx2DRMBXYvdHYhTCRMq2aDfvKCVrt0N3Sp1Or64Fkt",
+        "VULTR_BASE_URL": "https://inference.do-ai.run/v1",
+        "VULTR_DEFAULT_MODEL": "llama3.3-70b-instruct"
+      }
+    }
+  }
+}

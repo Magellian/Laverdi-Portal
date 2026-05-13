@@ -1,0 +1,40 @@
+{
+  "$schema": "https://openclaw.ai/schemas/plugin/v1.json",
+  "name": "vultr-inference",
+  "version": "1.0.0",
+  "description": "Vultr inference integration for OpenClaw agents. Exposes llama3.3-70b-instruct and deepseek-r1-distill-llama-70b via MCP tools.",
+  "author": "LaVerdi",
+  "license": "MIT",
+  "mcpServer": {
+    "transport": "stdio",
+    "command": "node",
+    "args": ["${PLUGIN_DIR}/../../vultr-mcp-server/dist/index.js"],
+    "env": {
+      "VULTR_API_KEY": "${VULTR_API_KEY}",
+      "VULTR_BASE_URL": "https://inference.do-ai.run/v1",
+      "VULTR_DEFAULT_MODEL": "llama3.3-70b-instruct"
+    }
+  },
+  "tools": [
+    {
+      "name": "vultr_chat_complete",
+      "description": "Generate text using Vultr inference (Llama 3.3 70B or DeepSeek R1)"
+    },
+    {
+      "name": "vultr_chat_stream",
+      "description": "Stream text generation from Vultr inference"
+    },
+    {
+      "name": "vultr_list_models",
+      "description": "List available Vultr inference models"
+    },
+    {
+      "name": "vultr_embed",
+      "description": "Generate text embeddings via Vultr inference"
+    }
+  ],
+  "config": {
+    "required": ["VULTR_API_KEY"],
+    "optional": ["VULTR_BASE_URL", "VULTR_DEFAULT_MODEL"]
+  }
+}

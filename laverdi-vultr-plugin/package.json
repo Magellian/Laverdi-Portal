@@ -1,0 +1,28 @@
+{
+  "name": "@laverdi/vultr-plugin",
+  "version": "1.0.0",
+  "description": "React/Next.js components for LaVerdi portal to manage and use Vultr inference",
+  "main": "src/index.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "keywords": ["vultr", "inference", "react", "nextjs", "laverdi"],
+  "author": "LaVerdi",
+  "license": "MIT",
+  "peerDependencies": {
+    "next": ">=14.0.0",
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
+  },
+  "dependencies": {
+    "openai": "^4.56.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.4.5"
+  }
+}

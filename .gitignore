@@ -1,0 +1,42 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Dependencies
+node_modules/
+.next/
+
+# Build output
+dist/
+build/
+*.pyc
+__pycache__/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets (NEVER commit these)
+# - API tokens
+# - Private keys
+# - Credentials
+# Keep these in .env.local only
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+/tmp/
+
+# Archive with old secrets
+_archive/
+credentials/
