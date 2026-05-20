@@ -1,0 +1,2979 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "",
+    "title": "standard public schema",
+    "version": "14.4"
+  },
+  "host": "dcvrkpgvxqdcboostkpz.supabase.co:443",
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "consumes": [
+    "application/json",
+    "application/vnd.pgrst.object+json;nulls=stripped",
+    "application/vnd.pgrst.object+json",
+    "text/csv"
+  ],
+  "produces": [
+    "application/json",
+    "application/vnd.pgrst.object+json;nulls=stripped",
+    "application/vnd.pgrst.object+json",
+    "text/csv"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "produces": [
+          "application/openapi+json",
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        },
+        "summary": "OpenAPI description (this document)",
+        "tags": [
+          "Introspection"
+        ]
+      }
+    },
+    "/subscriptions": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.stripe_subscription_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.stripe_customer_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.current_period_start"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.current_period_end"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.cancel_at_period_end"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.updated_at"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/subscriptions"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "subscriptions"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.subscriptions"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "subscriptions"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.stripe_subscription_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.stripe_customer_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.current_period_start"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.current_period_end"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.cancel_at_period_end"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.updated_at"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "subscriptions"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.stripe_subscription_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.stripe_customer_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.current_period_start"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.current_period_end"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.cancel_at_period_end"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.subscriptions.updated_at"
+          },
+          {
+            "$ref": "#/parameters/body.subscriptions"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "subscriptions"
+        ]
+      }
+    },
+    "/user_droplets": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.droplet_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.public_ip"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.private_ip"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.region"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.tier"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.pairing_token"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.updated_at"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/user_droplets"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "user_droplets"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.user_droplets"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "user_droplets"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.droplet_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.public_ip"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.private_ip"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.region"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.tier"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.pairing_token"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.updated_at"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "user_droplets"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.droplet_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.public_ip"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.private_ip"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.region"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.tier"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.pairing_token"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.user_droplets.updated_at"
+          },
+          {
+            "$ref": "#/parameters/body.user_droplets"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "user_droplets"
+        ]
+      }
+    },
+    "/model_tier_map": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.tier"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.model_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.price_monthly"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.description"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.updated_at"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/model_tier_map"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "model_tier_map"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.model_tier_map"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "model_tier_map"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.tier"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.model_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.price_monthly"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.description"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.updated_at"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "model_tier_map"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.tier"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.model_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.price_monthly"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.description"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.model_tier_map.updated_at"
+          },
+          {
+            "$ref": "#/parameters/body.model_tier_map"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "model_tier_map"
+        ]
+      }
+    },
+    "/usage_logs": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.endpoint"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.method"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.status_code"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.response_time_ms"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.timestamp"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.date"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.session_count"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.token_count"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.created_at"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/usage_logs"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "usage_logs"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.usage_logs"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "usage_logs"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.endpoint"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.method"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.status_code"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.response_time_ms"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.timestamp"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.date"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.session_count"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.token_count"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.created_at"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "usage_logs"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.endpoint"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.method"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.status_code"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.response_time_ms"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.timestamp"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.date"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.session_count"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.token_count"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.usage_logs.created_at"
+          },
+          {
+            "$ref": "#/parameters/body.usage_logs"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "usage_logs"
+        ]
+      }
+    },
+    "/instances": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.instances.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.container_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.model_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.port"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.ip_address"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.endpoint"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.api_key"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.updated_at"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/instances"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "instances"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.instances"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "instances"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.instances.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.container_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.model_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.port"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.ip_address"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.endpoint"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.api_key"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.updated_at"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "instances"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.instances.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.container_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.model_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.port"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.ip_address"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.status"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.endpoint"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.api_key"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.instances.updated_at"
+          },
+          {
+            "$ref": "#/parameters/body.instances"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "instances"
+        ]
+      }
+    },
+    "/users": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.users.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.tier"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.api_key"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.updated_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.model_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.openclaw_base_url"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.do_api_key_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.trial_expires_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.trial_converted"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.billing_enabled"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.trial_frozen"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.status"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/users"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.users"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.users.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.tier"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.api_key"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.updated_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.model_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.openclaw_base_url"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.do_api_key_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.trial_expires_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.trial_converted"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.billing_enabled"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.trial_frozen"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.status"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.users.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.tier"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.api_key"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.updated_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.model_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.openclaw_base_url"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.do_api_key_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.trial_expires_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.trial_converted"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.billing_enabled"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.trial_frozen"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.users.status"
+          },
+          {
+            "$ref": "#/parameters/body.users"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/api_keys": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.key"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.name"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.last_used_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.expires_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.active"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.tier"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/api_keys"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "api_keys"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.api_keys"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "api_keys"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.key"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.name"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.last_used_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.expires_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.active"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.tier"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "api_keys"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.key"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.name"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.last_used_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.expires_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.active"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.api_keys.tier"
+          },
+          {
+            "$ref": "#/parameters/body.api_keys"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "api_keys"
+        ]
+      }
+    },
+    "/channel_signal": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.phone_number"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.verified"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.connected_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.last_message"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.updated_at"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/channel_signal"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "channel_signal"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.channel_signal"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "channel_signal"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.phone_number"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.verified"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.connected_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.last_message"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.updated_at"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "channel_signal"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.phone_number"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.verified"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.connected_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.last_message"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.channel_signal.updated_at"
+          },
+          {
+            "$ref": "#/parameters/body.channel_signal"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "channel_signal"
+        ]
+      }
+    },
+    "/audit_logs": {
+      "get": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.action"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.target_user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.target_user_email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.old_value"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.new_value"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.ip_address"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.notes"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/order"
+          },
+          {
+            "$ref": "#/parameters/range"
+          },
+          {
+            "$ref": "#/parameters/rangeUnit"
+          },
+          {
+            "$ref": "#/parameters/offset"
+          },
+          {
+            "$ref": "#/parameters/limit"
+          },
+          {
+            "$ref": "#/parameters/preferCount"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "items": {
+                "$ref": "#/definitions/audit_logs"
+              },
+              "type": "array"
+            }
+          },
+          "206": {
+            "description": "Partial Content"
+          }
+        },
+        "tags": [
+          "audit_logs"
+        ]
+      },
+      "post": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/body.audit_logs"
+          },
+          {
+            "$ref": "#/parameters/select"
+          },
+          {
+            "$ref": "#/parameters/preferPost"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        },
+        "tags": [
+          "audit_logs"
+        ]
+      },
+      "delete": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.action"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.target_user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.target_user_email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.old_value"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.new_value"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.ip_address"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.notes"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "audit_logs"
+        ]
+      },
+      "patch": {
+        "parameters": [
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.created_at"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.action"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.target_user_id"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.target_user_email"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.old_value"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.new_value"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.ip_address"
+          },
+          {
+            "$ref": "#/parameters/rowFilter.audit_logs.notes"
+          },
+          {
+            "$ref": "#/parameters/body.audit_logs"
+          },
+          {
+            "$ref": "#/parameters/preferReturn"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "tags": [
+          "audit_logs"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "subscriptions": {
+      "required": [
+        "id",
+        "user_id",
+        "stripe_subscription_id",
+        "stripe_customer_id",
+        "status",
+        "current_period_start",
+        "current_period_end"
+      ],
+      "properties": {
+        "id": {
+          "default": "gen_random_uuid()",
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "Note:\nThis is a Foreign Key to `users.id`.<fk table='users' column='id'/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "stripe_subscription_id": {
+          "format": "character varying",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "stripe_customer_id": {
+          "format": "character varying",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "status": {
+          "format": "character varying",
+          "maxLength": 50,
+          "type": "string"
+        },
+        "current_period_start": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "current_period_end": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "cancel_at_period_end": {
+          "default": false,
+          "format": "boolean",
+          "type": "boolean"
+        },
+        "created_at": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "updated_at": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "user_droplets": {
+      "required": [
+        "id",
+        "user_id",
+        "droplet_id"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "bigint",
+          "type": "integer"
+        },
+        "user_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "droplet_id": {
+          "format": "bigint",
+          "type": "integer"
+        },
+        "public_ip": {
+          "format": "character varying",
+          "maxLength": 15,
+          "type": "string"
+        },
+        "private_ip": {
+          "format": "character varying",
+          "maxLength": 15,
+          "type": "string"
+        },
+        "region": {
+          "format": "character varying",
+          "maxLength": 10,
+          "type": "string"
+        },
+        "tier": {
+          "format": "character varying",
+          "maxLength": 20,
+          "type": "string"
+        },
+        "status": {
+          "default": "provisioning",
+          "format": "character varying",
+          "maxLength": 20,
+          "type": "string"
+        },
+        "pairing_token": {
+          "format": "character varying",
+          "maxLength": 256,
+          "type": "string"
+        },
+        "created_at": {
+          "default": "now()",
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "updated_at": {
+          "default": "now()",
+          "format": "timestamp without time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "model_tier_map": {
+      "required": [
+        "id",
+        "tier",
+        "model_id"
+      ],
+      "properties": {
+        "id": {
+          "default": "gen_random_uuid()",
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "tier": {
+          "format": "text",
+          "type": "string"
+        },
+        "model_id": {
+          "format": "text",
+          "type": "string"
+        },
+        "price_monthly": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "description": {
+          "format": "text",
+          "type": "string"
+        },
+        "created_at": {
+          "default": "now()",
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "updated_at": {
+          "default": "now()",
+          "format": "timestamp without time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "usage_logs": {
+      "required": [
+        "id",
+        "user_id"
+      ],
+      "properties": {
+        "id": {
+          "default": "gen_random_uuid()",
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "Note:\nThis is a Foreign Key to `users.id`.<fk table='users' column='id'/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "endpoint": {
+          "format": "character varying",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "method": {
+          "format": "character varying",
+          "maxLength": 10,
+          "type": "string"
+        },
+        "status_code": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "response_time_ms": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "timestamp": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "date": {
+          "default": "CURRENT_DATE",
+          "format": "date",
+          "type": "string"
+        },
+        "session_count": {
+          "default": 0,
+          "format": "integer",
+          "type": "integer"
+        },
+        "token_count": {
+          "default": 0,
+          "format": "integer",
+          "type": "integer"
+        },
+        "created_at": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "instances": {
+      "required": [
+        "id",
+        "user_id",
+        "container_id",
+        "model_id",
+        "port"
+      ],
+      "properties": {
+        "id": {
+          "default": "gen_random_uuid()",
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "Note:\nThis is a Foreign Key to `users.id`.<fk table='users' column='id'/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "container_id": {
+          "format": "text",
+          "type": "string"
+        },
+        "model_id": {
+          "format": "text",
+          "type": "string"
+        },
+        "port": {
+          "format": "integer",
+          "type": "integer"
+        },
+        "ip_address": {
+          "format": "text",
+          "type": "string"
+        },
+        "status": {
+          "default": "provisioning",
+          "format": "text",
+          "type": "string"
+        },
+        "endpoint": {
+          "format": "text",
+          "type": "string"
+        },
+        "api_key": {
+          "format": "text",
+          "type": "string"
+        },
+        "created_at": {
+          "default": "now()",
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "updated_at": {
+          "default": "now()",
+          "format": "timestamp without time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "users": {
+      "required": [
+        "id",
+        "email",
+        "api_key"
+      ],
+      "properties": {
+        "id": {
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "email": {
+          "format": "character varying",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "tier": {
+          "default": "starter",
+          "format": "character varying",
+          "maxLength": 50,
+          "type": "string"
+        },
+        "api_key": {
+          "format": "character varying",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "created_at": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "updated_at": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "model_id": {
+          "default": "anthropic-claude-haiku-4.5",
+          "format": "text",
+          "type": "string"
+        },
+        "openclaw_base_url": {
+          "default": "https://inference.do-ai.run/v1",
+          "format": "text",
+          "type": "string"
+        },
+        "do_api_key_id": {
+          "format": "text",
+          "type": "string"
+        },
+        "trial_expires_at": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "trial_converted": {
+          "default": false,
+          "format": "boolean",
+          "type": "boolean"
+        },
+        "billing_enabled": {
+          "default": true,
+          "format": "boolean",
+          "type": "boolean"
+        },
+        "trial_frozen": {
+          "default": false,
+          "format": "boolean",
+          "type": "boolean"
+        },
+        "status": {
+          "default": "provisioning",
+          "format": "text",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "api_keys": {
+      "required": [
+        "id",
+        "user_id",
+        "key"
+      ],
+      "properties": {
+        "id": {
+          "default": "gen_random_uuid()",
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "user_id": {
+          "description": "Note:\nThis is a Foreign Key to `users.id`.<fk table='users' column='id'/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "key": {
+          "format": "character varying",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "name": {
+          "default": "Default Key",
+          "format": "character varying",
+          "maxLength": 255,
+          "type": "string"
+        },
+        "last_used_at": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "created_at": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "expires_at": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "active": {
+          "default": true,
+          "format": "boolean",
+          "type": "boolean"
+        },
+        "tier": {
+          "format": "character varying",
+          "maxLength": 50,
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "channel_signal": {
+      "required": [
+        "id",
+        "phone_number"
+      ],
+      "properties": {
+        "id": {
+          "default": "gen_random_uuid()",
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "user_id": {
+          "format": "uuid",
+          "type": "string"
+        },
+        "phone_number": {
+          "format": "text",
+          "type": "string"
+        },
+        "verified": {
+          "default": false,
+          "format": "boolean",
+          "type": "boolean"
+        },
+        "connected_at": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "last_message": {
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "created_at": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        },
+        "updated_at": {
+          "default": "CURRENT_TIMESTAMP",
+          "format": "timestamp without time zone",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "audit_logs": {
+      "required": [
+        "id",
+        "action"
+      ],
+      "properties": {
+        "id": {
+          "default": "gen_random_uuid()",
+          "description": "Note:\nThis is a Primary Key.<pk/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "created_at": {
+          "default": "now()",
+          "format": "timestamp with time zone",
+          "type": "string"
+        },
+        "action": {
+          "format": "text",
+          "type": "string"
+        },
+        "target_user_id": {
+          "description": "Note:\nThis is a Foreign Key to `users.id`.<fk table='users' column='id'/>",
+          "format": "uuid",
+          "type": "string"
+        },
+        "target_user_email": {
+          "format": "text",
+          "type": "string"
+        },
+        "old_value": {
+          "format": "jsonb"
+        },
+        "new_value": {
+          "format": "jsonb"
+        },
+        "ip_address": {
+          "format": "text",
+          "type": "string"
+        },
+        "notes": {
+          "format": "text",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    }
+  },
+  "parameters": {
+    "preferParams": {
+      "name": "Prefer",
+      "description": "Preference",
+      "required": false,
+      "in": "header",
+      "type": "string"
+    },
+    "preferReturn": {
+      "name": "Prefer",
+      "description": "Preference",
+      "required": false,
+      "enum": [
+        "return=representation",
+        "return=minimal",
+        "return=none"
+      ],
+      "in": "header",
+      "type": "string"
+    },
+    "preferCount": {
+      "name": "Prefer",
+      "description": "Preference",
+      "required": false,
+      "enum": [
+        "count=none"
+      ],
+      "in": "header",
+      "type": "string"
+    },
+    "preferPost": {
+      "name": "Prefer",
+      "description": "Preference",
+      "required": false,
+      "enum": [
+        "return=representation",
+        "return=minimal",
+        "return=none",
+        "resolution=ignore-duplicates",
+        "resolution=merge-duplicates"
+      ],
+      "in": "header",
+      "type": "string"
+    },
+    "select": {
+      "name": "select",
+      "description": "Filtering Columns",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "on_conflict": {
+      "name": "on_conflict",
+      "description": "On Conflict",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "order": {
+      "name": "order",
+      "description": "Ordering",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "range": {
+      "name": "Range",
+      "description": "Limiting and Pagination",
+      "required": false,
+      "in": "header",
+      "type": "string"
+    },
+    "rangeUnit": {
+      "name": "Range-Unit",
+      "description": "Limiting and Pagination",
+      "required": false,
+      "default": "items",
+      "in": "header",
+      "type": "string"
+    },
+    "offset": {
+      "name": "offset",
+      "description": "Limiting and Pagination",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "limit": {
+      "name": "limit",
+      "description": "Limiting and Pagination",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.subscriptions": {
+      "name": "subscriptions",
+      "description": "subscriptions",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/subscriptions"
+      }
+    },
+    "rowFilter.subscriptions.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.subscriptions.user_id": {
+      "name": "user_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.subscriptions.stripe_subscription_id": {
+      "name": "stripe_subscription_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.subscriptions.stripe_customer_id": {
+      "name": "stripe_customer_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.subscriptions.status": {
+      "name": "status",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.subscriptions.current_period_start": {
+      "name": "current_period_start",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.subscriptions.current_period_end": {
+      "name": "current_period_end",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.subscriptions.cancel_at_period_end": {
+      "name": "cancel_at_period_end",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.subscriptions.created_at": {
+      "name": "created_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.subscriptions.updated_at": {
+      "name": "updated_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.user_droplets": {
+      "name": "user_droplets",
+      "description": "user_droplets",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/user_droplets"
+      }
+    },
+    "rowFilter.user_droplets.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.user_droplets.user_id": {
+      "name": "user_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.user_droplets.droplet_id": {
+      "name": "droplet_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.user_droplets.public_ip": {
+      "name": "public_ip",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.user_droplets.private_ip": {
+      "name": "private_ip",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.user_droplets.region": {
+      "name": "region",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.user_droplets.tier": {
+      "name": "tier",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.user_droplets.status": {
+      "name": "status",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.user_droplets.pairing_token": {
+      "name": "pairing_token",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.user_droplets.created_at": {
+      "name": "created_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.user_droplets.updated_at": {
+      "name": "updated_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.model_tier_map": {
+      "name": "model_tier_map",
+      "description": "model_tier_map",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/model_tier_map"
+      }
+    },
+    "rowFilter.model_tier_map.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.model_tier_map.tier": {
+      "name": "tier",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.model_tier_map.model_id": {
+      "name": "model_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.model_tier_map.price_monthly": {
+      "name": "price_monthly",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.model_tier_map.description": {
+      "name": "description",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.model_tier_map.created_at": {
+      "name": "created_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.model_tier_map.updated_at": {
+      "name": "updated_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.usage_logs": {
+      "name": "usage_logs",
+      "description": "usage_logs",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/usage_logs"
+      }
+    },
+    "rowFilter.usage_logs.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usage_logs.user_id": {
+      "name": "user_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usage_logs.endpoint": {
+      "name": "endpoint",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usage_logs.method": {
+      "name": "method",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usage_logs.status_code": {
+      "name": "status_code",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usage_logs.response_time_ms": {
+      "name": "response_time_ms",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usage_logs.timestamp": {
+      "name": "timestamp",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usage_logs.date": {
+      "name": "date",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usage_logs.session_count": {
+      "name": "session_count",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usage_logs.token_count": {
+      "name": "token_count",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.usage_logs.created_at": {
+      "name": "created_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.instances": {
+      "name": "instances",
+      "description": "instances",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/instances"
+      }
+    },
+    "rowFilter.instances.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.instances.user_id": {
+      "name": "user_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.instances.container_id": {
+      "name": "container_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.instances.model_id": {
+      "name": "model_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.instances.port": {
+      "name": "port",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.instances.ip_address": {
+      "name": "ip_address",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.instances.status": {
+      "name": "status",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.instances.endpoint": {
+      "name": "endpoint",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.instances.api_key": {
+      "name": "api_key",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.instances.created_at": {
+      "name": "created_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.instances.updated_at": {
+      "name": "updated_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.users": {
+      "name": "users",
+      "description": "users",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/users"
+      }
+    },
+    "rowFilter.users.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.email": {
+      "name": "email",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.tier": {
+      "name": "tier",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.api_key": {
+      "name": "api_key",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.created_at": {
+      "name": "created_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.updated_at": {
+      "name": "updated_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.model_id": {
+      "name": "model_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.openclaw_base_url": {
+      "name": "openclaw_base_url",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.do_api_key_id": {
+      "name": "do_api_key_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.trial_expires_at": {
+      "name": "trial_expires_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.trial_converted": {
+      "name": "trial_converted",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.billing_enabled": {
+      "name": "billing_enabled",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.trial_frozen": {
+      "name": "trial_frozen",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.users.status": {
+      "name": "status",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.api_keys": {
+      "name": "api_keys",
+      "description": "api_keys",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/api_keys"
+      }
+    },
+    "rowFilter.api_keys.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.api_keys.user_id": {
+      "name": "user_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.api_keys.key": {
+      "name": "key",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.api_keys.name": {
+      "name": "name",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.api_keys.last_used_at": {
+      "name": "last_used_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.api_keys.created_at": {
+      "name": "created_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.api_keys.expires_at": {
+      "name": "expires_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.api_keys.active": {
+      "name": "active",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.api_keys.tier": {
+      "name": "tier",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.channel_signal": {
+      "name": "channel_signal",
+      "description": "channel_signal",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/channel_signal"
+      }
+    },
+    "rowFilter.channel_signal.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.channel_signal.user_id": {
+      "name": "user_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.channel_signal.phone_number": {
+      "name": "phone_number",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.channel_signal.verified": {
+      "name": "verified",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.channel_signal.connected_at": {
+      "name": "connected_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.channel_signal.last_message": {
+      "name": "last_message",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.channel_signal.created_at": {
+      "name": "created_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.channel_signal.updated_at": {
+      "name": "updated_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "body.audit_logs": {
+      "name": "audit_logs",
+      "description": "audit_logs",
+      "required": false,
+      "in": "body",
+      "schema": {
+        "$ref": "#/definitions/audit_logs"
+      }
+    },
+    "rowFilter.audit_logs.id": {
+      "name": "id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.audit_logs.created_at": {
+      "name": "created_at",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.audit_logs.action": {
+      "name": "action",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.audit_logs.target_user_id": {
+      "name": "target_user_id",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.audit_logs.target_user_email": {
+      "name": "target_user_email",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.audit_logs.old_value": {
+      "name": "old_value",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.audit_logs.new_value": {
+      "name": "new_value",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.audit_logs.ip_address": {
+      "name": "ip_address",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    },
+    "rowFilter.audit_logs.notes": {
+      "name": "notes",
+      "required": false,
+      "in": "query",
+      "type": "string"
+    }
+  },
+  "externalDocs": {
+    "description": "PostgREST Documentation",
+    "url": "https://postgrest.org/en/v14/references/api.html"
+  }
+}

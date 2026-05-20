@@ -1,5 +1,137 @@
 # MEMORY.md
 
+## ⚠️ SESSION 2026-05-19 — EQEMULATOR SETUP (PAUSED - CONFIG BUG FOUND)
+
+**STATUS:** 🔍 **Debugging paused** | ⏳ **Resuming later** | ❌ **`world.exe` not reading config file**
+
+**Current State (DAD-WS3):**
+- ✅ MariaDB 12.2.2 running on localhost:3306
+- ✅ Database: `peq` created and ready
+- ✅ User: `eq`@`localhost` + `eq`@`127.0.0.1` created with password `eqemu`
+- ✅ Permissions: ALL PRIVILEGES on `*.*` granted to `eq` user
+- ✅ Config file: `C:\EQEmulator\eqemu_config.json` (valid UTF-8 no-BOM JSON)
+- ❌ `world.exe` crashes with access denied despite valid credentials
+
+**The Problem:**
+- `world.exe` always tries to connect as `eq@localhost:3306`
+- Manual test `mysql -u eq -p -h 127.0.0.1` with password `eqemu` works fine
+- `world.exe` either ignores `eqemu_config.json` or has hardcoded credential bug
+- Crash log: `EXCEPTION_ACCESS_VIOLATION` after failed DB connection
+
+**Tests Completed:**
+1. ✅ Config file written with UTF-8 no-BOM (fixed initial BOM error)
+2. ✅ MariaDB credentials verified (manual `mysql` client connects)
+3. ✅ Tried hardcoded `eq` user with password `eqemu` — failed
+4. ✅ Tried `eq` user with no password — failed (binary sends password anyway)
+5. ✅ Verified config JSON is correct format and location
+6. ✅ `world.exe` ignores all CLI flags (`--help`, `-h`, `-?`)
+
+**Root Cause:**
+- `world.exe` binary likely has hardcoded connection logic that doesn't read config properly
+- Windows-specific build issue or missing config path handling
+
+**To Resume Later:**
+1. Check EQEmulator GitHub issues for Windows config bugs
+2. Try downloading a different build of `world.exe`
+3. Look for Linux/WSL2 alternative if Windows binary is broken
+4. Review source code credential handling if available
+5. Contact EQEmulator community on Discord/forums
+
+**Files on DAD-WS3:**
+- `C:\EQEmulator\eqemu_config.json` — correct JSON, UTF-8 no-BOM
+- `C:\EQEmulator\world.exe` — version 23.10.3, not reading config
+- MariaDB service running, all tables/users in place
+
+---
+
+## 🔄 SESSION 2026-05-17 — TELEGRAM INTEGRATION PHASE 1-2 COMPLETE, DEPLOYMENT BLOCKED BY SSH
+
+**STATUS:** ✅ **All code built & tested** | ⏳ **Awaiting SSH recovery or VPS console access** | ✅ **Portal HTTP healthy**
+
+**Infrastructure Status:**
+- ✅ Portal HTTP: Responding (200 OK, all health checks pass)
+- ✅ Database: Healthy (status endpoint confirms)
+- ✅ Instances: 2 running
+- ❌ SSH: Completely unresponsive (daemon hung, port 22 open but timing out)
+
+**What Was Done (13:40-14:14 PDT):**
+
+1. ✅ **Telegram Configuration Handler** (`telegram_configure_channels.py`)
+   - Validates bot tokens with Telegram API (`/getMe`)
+   - Sets up webhooks automatically (`/setWebhook`)
+   - Stores verified configs in Supabase `channels` table
+   - Comprehensive error handling at each step
+
+2. ✅ **Telegram Webhook Handler** (`telegram_webhook_handler.ts`)
+   - Receives POST updates from Telegram
+   - Routes messages to user's agent via RPC
+   - Sends agent responses back to Telegram
+   - Full error handling & logging
+
+3. ✅ **Deployment Instructions & Scripts**
+   - `TELEGRAM_IMPLEMENTATION_PLAN.md` — Full audit + implementation guide
+   - `TELEGRAM_DEPLOYMENT_STEPS.md` — Step-by-step deployment instructions
+   - `deploy_telegram.sh` — Automated deployment script (ready to run on VPS)
+
+**Infrastructure Status:**
+- ✅ Database schema exists (channels table, RLS policies)
+- ✅ Portal API endpoints ready (routes to Command Center)
+- ✅ Command Center infrastructure in place
+- ⏳ **PENDING:** Deploy webhook handler to `/pages/api/webhooks/telegram.ts`
+- ⏳ **PENDING:** Update Command Center with Telegram validation logic
+- ⏳ **PENDING:** Deploy Telegram UI component
+- ⏳ **PENDING:** End-to-end testing
+
+**Files Created (in /workspace):**
+- `telegram_configure_channels.py` — Backend Telegram handler
+- `telegram_webhook_handler.ts` — Webhook receiver
+- `TELEGRAM_IMPLEMENTATION_PLAN.md` — Full audit report
+- `TELEGRAM_DEPLOYMENT_STEPS.md` — Deployment guide
+- `deploy_telegram.sh` — Automated deployment script
+
+**Deployment Blocker:**
+- SSH daemon hung during npm build (~14:05 PDT)
+- All SSH attempts timeout (port 22 open but unresponsive)
+- HTTP layer unaffected (Portal still fully operational)
+- Portal health check shows: portal ✅, database ✅, instances ✅
+
+**Next Steps (Awaiting Your Action):**
+1. **Option A (Fastest):** Access VPS console → restart SSH or reboot
+2. **Option B (Passive):** Wait 15-30 min for SSH to recover automatically
+3. Once SSH responsive: `ssh root@66.42.70.66 "bash /root/deploy_telegram.sh"`
+4. Create test Telegram bot via @BotFather
+5. Test pairing & end-to-end message flow
+
+**All code files ready in workspace:**
+- `telegram_webhook_handler.ts` — Webhook receiver (9.6 KB)
+- `telegram_configure_channels.py` — Configuration logic (4.2 KB)
+- `deploy_telegram.sh` — Automated deployment script (3.8 KB)
+- `TELEGRAM_DEPLOYMENT_STATUS.md` — Detailed status report
+
+---
+
+## ✅ SESSION 2026-05-17 — LAVERDI HOMEPAGE STYLING FIXED
+
+**STATUS:** ✅ **Homepage fully styled and operational**
+
+**Problem:** LaVerdi homepage buttons showed as unstyled links with underlines instead of styled buttons. Layout and scale also broken.
+
+**Root Cause:** Nginx proxy misconfiguration — all `proxy_pass` directives pointed to port **3005** instead of **3000** where Next.js was running. This caused static assets (`/_next/static/css/*.css`, `_buildManifest.js`, etc.) to return 404 errors.
+
+**Solution:**
+1. Fixed `tailwind.config.ts` — corrected glob patterns from `./pages//` to `./pages/**/*.{js,ts,jsx,tsx,mdx}`
+2. Rebuilt Next.js: `npm run build` — generated full 1221-line CSS file with all Tailwind utilities
+3. Fixed Nginx config: Changed 4 instances of `127.0.0.1:3005` → `127.0.0.1:3000` in `/etc/nginx/nginx.conf`
+   - `/health` location
+   - `/api/` location
+   - `~* \.(js|css|png|jpg|...` location (static assets)
+   - `location /` (catch-all)
+4. Reloaded Nginx: `sudo systemctl reload nginx`
+
+**Result:** ✅ CSS now served correctly (44KB file with full Tailwind output), buttons styled, layout proper, responsive working.
+
+---
+
 ## ✅ SESSION 2026-05-06 — WEBHOOK-BASED AUTO-STATUS WORKING
 
 **STATUS:** ✅ **Full provisioning pipeline complete** — Signup → Instance → OpenClaw install → Webhook callback → Status change. Testing now.
