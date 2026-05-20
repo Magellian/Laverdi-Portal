@@ -1,5 +1,70 @@
 # MEMORY.md
 
+## ✅ SESSION 2026-05-19/20 — LAVERDI TELEGRAM FIX #3 COMPLETE
+
+**STATUS:** 🟢 **FIX #3 COMPLETE** | Endpoints deployed & tested | SSH working perfectly
+
+**SSH Issue (RESOLVED):**
+- Root cause: `id_ed25519` key not authorized on server
+- Solution: Added key to `~/.ssh/authorized_keys` via Vultr console
+- Status: ✅ SSH instant and reliable
+
+**Fix #1: Hostname Resolution (✅ DONE)**
+- ✅ Added `127.0.0.1 laverdi-command-center` to `/etc/hosts`
+- ✅ Portal can reach Command Center at `http://laverdi-command-center:8000`
+- ✅ Health check: 200 OK
+
+**Fix #2: Database Table (⏳ READY TO DEPLOY)**
+- ⏳ Not yet created (awaiting manual SQL run)
+- Action: Copy `migrations/008_create_channels_table.sql` into Supabase SQL Editor
+- Creates `channels` table with user_id, channel_name, config (JSON), connected, etc.
+- File ready in workspace: `/migrations/008_create_channels_table.sql`
+
+**Fix #3: API Endpoints (✅ COMPLETE & TESTED)**
+- ✅ Refactored `/api/configure-channels` endpoint
+- ✅ Now accepts: `{userId, channels: {telegram: {botToken: ...}}}`
+- ✅ Validates Telegram tokens against Telegram API
+- ✅ Returns appropriate errors (401 for invalid token, etc.)
+- ✅ Command Center running: `python3 /root/command-center.py`
+- ✅ Tested with Python requests → 200 OK response
+- ✅ Telegram validation working (rejects invalid tokens correctly)
+
+**Test Results:**
+```
+Request: POST /api/configure-channels
+Payload: {"userId": "test-user-123", "channels": {"telegram": {"botToken": "123456:INVALID"}}}
+Response: {"success": true, "channels": {"telegram": {"success": false, "error": "Telegram error 401"}}}
+Status: ✅ 200 OK
+```
+
+**What's Now Working:**
+- ✅ Portal: https://laverdi.tech (live)
+- ✅ SSH: instant, no timeouts
+- ✅ Hostname: resolves correctly
+- ✅ Command Center: running and healthy
+- ✅ API endpoint: deployed and functional
+- ✅ Telegram validation: working
+- ⏳ Database persistence: awaiting table creation (Fix #2)
+
+**Next Action (Only One Left):**
+1. Run Fix #2 SQL in Supabase console (5 minutes)
+2. Create test Telegram bot (@BotFather)
+3. Test end-to-end pairing in portal
+4. Done!
+
+**Files Modified:**
+- `/root/command-center.py` — Refactored endpoints
+- `/root/command-center.py.bak-before-refactor` — Backup
+- `/etc/hosts` — Added hostname entry
+- `~/.ssh/authorized_keys` — Added ED25519 key
+
+**Files Ready:**
+- `migrations/008_create_channels_table.sql` — Database schema
+- `FIX3_STATUS.md` — Detailed status and verification
+- `test_api.py` — Python test script (uploaded to server)
+
+---
+
 ## ⚠️ SESSION 2026-05-19 — EQEMULATOR SETUP (PAUSED - CONFIG BUG FOUND)
 
 **STATUS:** 🔍 **Debugging paused** | ⏳ **Resuming later** | ❌ **`world.exe` not reading config file**
