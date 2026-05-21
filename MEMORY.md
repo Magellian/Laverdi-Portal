@@ -1,5 +1,55 @@
 # MEMORY.md
 
+## 🚀 PROJECT: LAVERDI SOCIAL (Multi-Platform Content Distributor)
+
+**Status:** 📋 **Market Validation Complete** | Ready for Hermes handoff  
+**Date Started:** 2026-05-20  
+**Owner:** Chris LaVerdiere  
+**Builder:** Hermes (assigned)
+
+### Quick Summary
+**LaVerdi Social** is a SaaS product for content creators and agencies to post videos/images to YouTube, TikTok, Instagram, X, and Facebook from one dashboard.
+
+**Market Opportunity:**
+- TAM: $5-10 billion
+- Year 1 Revenue Potential: $25k (400 customers)
+- Year 3 Revenue Potential: $2.7M+ (3,000 customers)
+
+**Key Differentiator:** First tool to support YouTube + TikTok upload + all 5 platforms natively
+
+### Implementation Plan
+**Phase 1: MVP (8-10 weeks)**
+- Backend: YouTube, TikTok, Instagram, X, Facebook APIs
+- Frontend: Simple upload + dashboard (built on LaVerdi portal tech)
+- Database: Multi-tenant Supabase
+- Pricing: $29/mo (Starter) → $299/mo (Agency)
+
+**Initial Deployment:** Build for RVConnector site first (Chris's existing platform)
+- Later: Spin off as standalone SaaS (laverdi-social.com)
+
+**Next Action:** Hermes builds MVP (detailed spec in workspace)
+
+### Files & Documentation
+- `LAVERDI_SOCIAL_MARKET_VALIDATION.md` — Full market analysis
+- `CHANNELS_STATUS_20260520.md` — API integration status
+- Competitive analysis vs. Buffer, Hootsuite, Later
+- Revenue projections (conservative Year 1-3)
+
+### APIs Status (All Go ✅)
+- ✅ YouTube Data API v3 (upload + schedule)
+- ✅ TikTok Business API (upload, limited schedule)
+- ✅ Instagram Graph API (Meta)
+- ✅ X/Twitter API v2
+- ✅ Facebook Graph API
+
+### RVConnector Integration (Priority)
+- Add to RVConnector as premium feature
+- Use for RV lifestyle content distribution
+- Build in public for marketing
+- Later: Separate SaaS product
+
+---
+
 ## ✅ SESSION 2026-05-19/20 — LAVERDI TELEGRAM FIX #3 COMPLETE
 
 **STATUS:** 🟢 **FIX #3 COMPLETE** | Endpoints deployed & tested | SSH working perfectly

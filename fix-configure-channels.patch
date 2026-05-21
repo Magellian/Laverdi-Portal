@@ -1,0 +1,25 @@
+--- ORIGINAL approach (WRONG - uses 'channel_name' column that doesn't exist)
++++ FIXED approach (uses 'platform' and 'token' columns that actually exist)
+
+The channels table schema is:
+- id (UUID)
+- user_id (UUID FK)
+- platform (VARCHAR) — 'telegram', 'discord', 'slack', 'signal'
+- token (VARCHAR) — the bot/app token
+- (possibly verified, created_at, etc.)
+
+CHANGE ALL supabase.table('channels').upsert({...}) calls to use:
+{
+  'user_id': user_id,
+  'platform': channel_name,  # 'telegram', 'discord', etc.
+  'token': bot_token,        # the actual token
+  ...other fields...
+}
+
+INSTEAD OF:
+{
+  'user_id': user_id,
+  'channel_name': 'telegram',  # WRONG - column doesn't exist
+  'config': {...},             # WRONG - column doesn't exist
+  ...
+}
