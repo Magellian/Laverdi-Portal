@@ -121,10 +121,9 @@ export async function DELETE(
     console.error(`Failed to reach provisioner for teardown of ${id}: ${err}`)
   }
 
-  // Mark instance as stopped in DB
-  await prisma.instance.update({
+  // Delete instance from DB entirely
+  await prisma.instance.delete({
     where: { id },
-    data: { status: 'stopped' },
   })
 
   return NextResponse.json({ message: 'Agent deleted' })
