@@ -1,8 +1,39 @@
-export default function Home() {
+import { auth } from '@/lib/auth'
+
+export default async function Home() {
+  const session = await auth()
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-black to-zinc-900">
+      {/* Navbar */}
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-zinc-800 bg-black/80 backdrop-blur-sm">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+          <a href="/" className="text-white font-bold text-lg">LaVerdi</a>
+          <div className="flex items-center gap-4">
+            <a href="/pricing" className="text-zinc-400 hover:text-white text-sm transition-colors">
+              Pricing
+            </a>
+            {session ? (
+              <a
+                href="/dashboard"
+                className="bg-white text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-zinc-100 transition-colors"
+              >
+                Dashboard
+              </a>
+            ) : (
+              <a
+                href="/login"
+                className="bg-white text-black px-4 py-2 rounded-lg text-sm font-semibold hover:bg-zinc-100 transition-colors"
+              >
+                Log In
+              </a>
+            )}
+          </div>
+        </div>
+      </nav>
+
       {/* Hero Section */}
-      <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
+      <section className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 pt-36 text-center">
         <h1 className="text-5xl sm:text-6xl font-bold text-white mb-6">
           Your AI Agent.<br />Your Rules.
         </h1>
@@ -110,5 +141,5 @@ export default function Home() {
         </div>
       </footer>
     </div>
-  );
+  )
 }
