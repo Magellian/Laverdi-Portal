@@ -166,8 +166,9 @@ model Instance {
   tier           String?  // Tier at time of provisioning
   modelPrimary   String?  // Primary model (e.g. anthropic/claude-sonnet-4-6)
   modelFallback  String?  // Fallback model
-  name           String?  // User-given name for the agent
-  createdAt      DateTime @default(now())
+  name              String?  // User-given name for the agent
+  telegramBotToken  String?  // Telegram bot token for this instance
+  createdAt         DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   // Relations

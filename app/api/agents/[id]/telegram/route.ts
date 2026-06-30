@@ -60,6 +60,12 @@ export async function POST(
       )
     }
 
+    // Persist token so the dashboard can show connected status
+    await prisma.instance.update({
+      where: { id },
+      data: { telegramBotToken: botToken },
+    })
+
     return NextResponse.json({
       status: 'connected',
       message: 'Telegram bot connected! Send a message to your bot to start chatting.',

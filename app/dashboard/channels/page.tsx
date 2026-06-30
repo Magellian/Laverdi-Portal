@@ -7,6 +7,7 @@ interface Agent {
   name: string | null
   status: string
   port: number | null
+  hasTelegram: boolean
 }
 
 export default function ChannelsPage() {
@@ -18,7 +19,7 @@ export default function ChannelsPage() {
   const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null)
   const [showSteps, setShowSteps] = useState(false)
 
-  useEffect(() => {
+  const fetchAgents = () => {
     fetch('/api/agents')
       .then((r) => r.json())
       .then((data) => {
@@ -27,6 +28,10 @@ export default function ChannelsPage() {
         if (running.length === 1) setSelectedAgent(running[0].id)
       })
       .finally(() => setLoading(false))
+  }
+
+  useEffect(() => {
+    fetchAgents()
   }, [])
 
   const connectTelegram = async () => {
@@ -45,6 +50,7 @@ export default function ChannelsPage() {
       if (res.ok) {
         setResult({ ok: true, message: data.message || 'Telegram connected!' })
         setBotToken('')
+        fetchAgents()
       } else {
         setResult({ ok: false, message: data.error || 'Connection failed' })
       }
@@ -54,6 +60,8 @@ export default function ChannelsPage() {
       setConnecting(false)
     }
   }
+
+  const selectedAgentData = agents.find((a) => a.id === selectedAgent)
 
   if (loading) {
     return (
@@ -213,26 +221,36 @@ export default function ChannelsPage() {
           </div>
         ) : (
           <div className="space-y-4">
-            {agents.length > 1 && (
-              <div>
-                <label className="block text-sm text-zinc-400 mb-1">Select Agent</label>
-                <select
-                  value={selectedAgent}
-                  onChange={(e) => setSelectedAgent(e.target.value)}
-                  className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-white text-sm focus:border-white focus:outline-none"
-                >
-                  <option value="">Choose an agent...</option>
-                  {agents.map((a) => (
-                    <option key={a.id} value={a.id}>
-                      {a.name || `Agent ${a.id.slice(0, 8)}`}
-                    </option>
-                  ))}
-                </select>
+            {/* Agent selector */}
+            <div>
+              <label className="block text-sm text-zinc-400 mb-1">Select Agent</label>
+              <select
+                value={selectedAgent}
+                onChange={(e) => { setSelectedAgent(e.target.value); setResult(null) }}
+                className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2 text-white text-sm focus:border-white focus:outline-none"
+              >
+                <option value="">Choose an agent...</option>
+                {agents.map((a) => (
+                  <option key={a.id} value={a.id}>
+                    {a.name || `Agent ${a.id.slice(0, 8)}`}
+                    {a.hasTelegram ? ' ✓ Connected' : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Connected status banner */}
+            {selectedAgentData?.hasTelegram && (
+              <div className="rounded-lg border border-blue-500/20 bg-blue-500/10 p-3 flex items-center gap-2">
+                <span className="text-blue-400 text-sm font-medium">Telegram connected</span>
+                <span className="text-zinc-500 text-xs">— enter a new token below to replace it</span>
               </div>
             )}
 
             <div>
-              <label className="block text-sm text-zinc-400 mb-1">Bot Token</label>
+              <label className="block text-sm text-zinc-400 mb-1">
+                {selectedAgentData?.hasTelegram ? 'New Bot Token (replaces existing)' : 'Bot Token'}
+              </label>
               <input
                 type="text"
                 value={botToken}
@@ -247,7 +265,11 @@ export default function ChannelsPage() {
               disabled={connecting || !botToken || !selectedAgent}
               className="rounded-lg bg-white text-black px-4 py-2.5 text-sm font-semibold hover:bg-zinc-100 transition-colors disabled:opacity-50 w-full"
             >
-              {connecting ? 'Connecting...' : 'Connect Telegram Bot'}
+              {connecting
+                ? 'Connecting...'
+                : selectedAgentData?.hasTelegram
+                ? 'Update Telegram Bot'
+                : 'Connect Telegram Bot'}
             </button>
 
             {result && (
