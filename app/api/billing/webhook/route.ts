@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import type Stripe from 'stripe'
 import { prisma } from '@/lib/prisma'
 import { stripe, getTierFromPriceId } from '@/lib/stripe'
-import { provisionAgent } from '@/lib/provisioning/engine'
+import { provisionAgent, callProvisioner } from '@/lib/provisioning/engine'
 import { sendWelcomeEmail } from '@/lib/email'
 
 /** Safely extract period dates from a Stripe subscription object */
@@ -112,6 +112,16 @@ export async function POST(request: NextRequest) {
           if (existingAgents === 0) {
             const provisionResult = await provisionAgent(user.id, tier)
             console.log(`  Auto-provisioned agent: ${provisionResult.instanceId} (${provisionResult.status})`)
+
+            // Spin up the Hermes systemd service via provisioner
+            if (provisionResult.status !== 'error') {
+              await callProvisioner({
+                id: provisionResult.instanceId,
+                port: provisionResult.port,
+                tier,
+                pairingToken: provisionResult.pairingToken,
+              })
+            }
 
             // Send welcome email with API key
             if (customerEmail) {

@@ -46,19 +46,19 @@ function getModelConfig(tier: string) {
   switch (tier) {
     case 'enterprise':
       return {
-        primary: 'anthropic/claude-opus-4-6',
-        fallback: 'anthropic/claude-sonnet-4-6',
+        primary: 'zai-org/GLM-5.1-FP8',
+        fallback: 'moonshotai/Kimi-K2.6',
       }
     case 'pro':
       return {
-        primary: 'anthropic/claude-sonnet-4-6',
-        fallback: 'openai/gpt-4.1-mini',
+        primary: 'moonshotai/Kimi-K2.6',
+        fallback: 'deepseek-ai/DeepSeek-V4-Flash',
       }
     case 'starter':
     default:
       return {
-        primary: 'openai/gpt-4.1-mini',
-        fallback: 'openai/gpt-4.1-nano',
+        primary: 'deepseek-ai/DeepSeek-V4-Flash',
+        fallback: 'deepseek-ai/DeepSeek-V4-Flash',
       }
   }
 }
