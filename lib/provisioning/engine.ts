@@ -70,6 +70,7 @@ export interface ProvisionResult {
   apiKey: string
   status: 'provisioning' | 'error'
   error?: string
+  errorType?: 'limit_reached' | 'no_ports' | 'unknown'
 }
 
 /**
@@ -100,6 +101,7 @@ export async function provisionAgent(
       pairingToken: '',
       apiKey: '',
       status: 'error',
+      errorType: 'limit_reached',
       error: `Agent limit reached (${currentCount}/${limits.maxAgents}). Upgrade your plan for more.`,
     }
   }

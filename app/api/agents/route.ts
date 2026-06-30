@@ -2,9 +2,10 @@ import { auth } from '@/lib/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { provisionAgent, callProvisioner } from '@/lib/provisioning/engine'
+import { getTierLimits } from '@/lib/stripe'
 
 /**
- * GET /api/agents — List user's agent instances
+ * GET /api/agents — List user's agent instances with tier limit info
  */
 export async function GET() {
   const session = await auth()
@@ -13,23 +14,50 @@ export async function GET() {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
-  const instances = await prisma.instance.findMany({
-    where: { ownerId: session.user.id },
-    orderBy: { createdAt: 'desc' },
-    select: {
-      id: true,
-      name: true,
-      status: true,
-      port: true,
-      tier: true,
-      modelPrimary: true,
-      modelFallback: true,
-      createdAt: true,
-      updatedAt: true,
-    },
-  })
+  const [instances, subscription] = await Promise.all([
+    prisma.instance.findMany({
+      where: { ownerId: session.user.id },
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        name: true,
+        status: true,
+        port: true,
+        tier: true,
+        modelPrimary: true,
+        modelFallback: true,
+        telegramBotToken: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    }),
+    prisma.subscription.findFirst({
+      where: {
+        userId: session.user.id,
+        status: { in: ['active', 'trialing'] },
+      },
+      select: { tier: true },
+    }),
+  ])
 
-  return NextResponse.json({ instances })
+  const tier = subscription?.tier || 'starter'
+  const limits = getTierLimits(tier)
+  const activeCount = instances.filter((i) =>
+    ['provisioning', 'running'].includes(i.status)
+  ).length
+
+  const instancesWithFlags = instances.map((i) => ({
+    ...i,
+    hasTelegram: !!i.telegramBotToken,
+    telegramBotToken: undefined,
+  }))
+
+  return NextResponse.json({
+    instances: instancesWithFlags,
+    tier,
+    maxAgents: limits.maxAgents,
+    agentCount: activeCount,
+  })
 }
 
 /**
@@ -64,7 +92,8 @@ export async function POST(request: NextRequest) {
   const result = await provisionAgent(session.user.id, subscription.tier)
 
   if (result.status === 'error') {
-    return NextResponse.json({ error: result.error }, { status: 400 })
+    const status = result.errorType === 'limit_reached' ? 403 : 400
+    return NextResponse.json({ error: result.error }, { status })
   }
 
   // Update name if provided
