@@ -1,0 +1,181 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User model
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  emailVerified DateTime?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // Stripe
+  stripeCustomerId      String?   @unique
+
+  // Relations
+  accounts              Account[]
+  sessions              Session[]
+  organizations         Organization[] @relation("owner")
+  organizationMembers   OrganizationMember[]
+  workspaces            Workspace[]
+  instances             Instance[]
+  subscriptions         Subscription[]
+
+  @@map("user")
+}
+
+// NextAuth Account
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?  @db.Text
+  access_token       String?  @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?  @db.Text
+  session_state      String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("account")
+}
+
+// NextAuth Session
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+// Verification Token (for email verification, etc.)
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_token")
+}
+
+// Organization
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  ownerId   String
+  owner     User     @relation("owner", fields: [ownerId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  members    OrganizationMember[]
+  workspaces Workspace[]
+
+  @@index([ownerId])
+  @@map("organization")
+}
+
+// Organization Membership
+model OrganizationMember {
+  id             String   @id @default(cuid())
+  userId         String
+  organizationId String
+  role           String   @default("member") // owner, admin, member
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+  @@map("organization_member")
+}
+
+// Workspace
+model Workspace {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  ownerId        String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  owner        User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  instances    Instance[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@index([ownerId])
+  @@map("workspace")
+}
+
+// Subscription (Stripe-linked)
+model Subscription {
+  id                   String   @id @default(cuid())
+  userId               String
+  stripeCustomerId     String?
+  stripeSubscriptionId String?  @unique
+  stripePriceId        String?
+  tier                 String   @default("starter") // starter, pro, enterprise
+  status               String   @default("incomplete") // incomplete, active, past_due, canceled, unpaid
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean  @default(false)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([stripeCustomerId])
+  @@map("subscription")
+}
+
+// OpenClaw Agent Instance (one Docker container per instance)
+model Instance {
+  id             String   @id @default(cuid())
+  workspaceId    String
+  ownerId        String
+  hermesAgentId  String?  // Docker container ID (set when running)
+  status         String   @default("provisioning") // provisioning, running, stopped, error
+  port           Int?     // Host port mapped to container's 18789
+  pairingToken   String?  // Auto-approve token for device pairing
+  apiKey         String?  @unique // External API key for this instance
+  tier           String?  // Tier at time of provisioning
+  modelPrimary   String?  // Primary model (e.g. anthropic/claude-sonnet-4-6)
+  modelFallback  String?  // Fallback model
+  name           String?  // User-given name for the agent
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  // Relations
+  workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  owner     User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId])
+  @@index([ownerId])
+  @@index([port])
+  @@map("instance")
+}

@@ -1,0 +1,9 @@
+model:
+  model: deepseek-ai/DeepSeek-V4-Flash
+  provider: custom
+  base_url: https://api.vultrinference.com/v1
+  api_key: 5Q6AQULLLXA37KCIHRS2ZJIFEVE2VI6AXTJA
+dashboard:
+  basic_auth:
+    username: admin
+    password_hash: "scrypt$16384$8$1$34Y23YZEt//hRtd7rmjcGQ==$h1T+O1eCQw4j6spmiz3CTAURMCN/VORCp7bs3OOJK30="

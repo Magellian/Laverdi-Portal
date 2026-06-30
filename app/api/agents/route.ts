@@ -1,0 +1,97 @@
+import { auth } from '@/lib/auth'
+import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma'
+import { provisionAgent, callProvisioner } from '@/lib/provisioning/engine'
+
+/**
+ * GET /api/agents — List user's agent instances
+ */
+export async function GET() {
+  const session = await auth()
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const instances = await prisma.instance.findMany({
+    where: { ownerId: session.user.id },
+    orderBy: { createdAt: 'desc' },
+    select: {
+      id: true,
+      name: true,
+      status: true,
+      port: true,
+      tier: true,
+      modelPrimary: true,
+      modelFallback: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  })
+
+  return NextResponse.json({ instances })
+}
+
+/**
+ * POST /api/agents — Provision a new agent instance
+ * Body: { name?: string }
+ */
+export async function POST(request: NextRequest) {
+  const session = await auth()
+
+  if (!session?.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Get user's active subscription
+  const subscription = await prisma.subscription.findFirst({
+    where: {
+      userId: session.user.id,
+      status: { in: ['active', 'trialing'] },
+    },
+  })
+
+  if (!subscription) {
+    return NextResponse.json(
+      { error: 'Active subscription required. Please subscribe first.' },
+      { status: 403 }
+    )
+  }
+
+  const body = await request.json().catch(() => ({}))
+  const name = body.name || null
+
+  const result = await provisionAgent(session.user.id, subscription.tier)
+
+  if (result.status === 'error') {
+    return NextResponse.json({ error: result.error }, { status: 400 })
+  }
+
+  // Update name if provided
+  if (name) {
+    await prisma.instance.update({
+      where: { id: result.instanceId },
+      data: { name },
+    })
+  }
+
+  // Call provisioner to actually start the Hermes instance
+  const provisionResult = await callProvisioner({
+    id: result.instanceId,
+    port: result.port,
+    tier: subscription.tier,
+    pairingToken: result.pairingToken,
+  })
+
+  return NextResponse.json({
+    instanceId: result.instanceId,
+    port: result.port,
+    apiKey: result.apiKey,
+    status: provisionResult ? 'running' : 'provisioning',
+    dashboardUrl: provisionResult?.dashboard_url || null,
+    dashboardPassword: provisionResult?.dashboard_password || null,
+    message: provisionResult
+      ? 'Agent is live! Open the dashboard to get started.'
+      : 'Agent is being provisioned. It will be available in 1-2 minutes.',
+  }, { status: 201 })
+}
