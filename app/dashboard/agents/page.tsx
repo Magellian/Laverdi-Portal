@@ -91,6 +91,21 @@ export default function AgentsPage() {
     }
   }
 
+  const retryAgent = async (id: string) => {
+    if (!confirm('Retry provisioning this agent?')) return
+    try {
+      const res = await fetch(`/api/agents/${id}/retry`, { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) {
+        setError(data.error || 'Failed to retry')
+        return
+      }
+      await fetchAgents()
+    } catch {
+      setError('Failed to retry provisioning')
+    }
+  }
+
   if (loading) {
     return (
       <div className="p-8">
@@ -262,6 +277,14 @@ export default function AgentsPage() {
                 >
                   Delete
                 </button>
+                {(['provisioning', 'error'].includes(agent.status)) && (
+                  <button
+                    onClick={() => retryAgent(agent.id)}
+                    className="rounded-lg border border-yellow-500/20 bg-yellow-500/10 px-3 py-1.5 text-sm text-yellow-400 hover:bg-yellow-500/20 transition-colors"
+                  >
+                    ↻ Retry
+                  </button>
+                )}
               </div>
             </div>
           ))}

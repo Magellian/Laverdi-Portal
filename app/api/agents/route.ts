@@ -5,6 +5,28 @@ import { provisionAgent, callProvisioner } from '@/lib/provisioning/engine'
 import { getTierLimits } from '@/lib/stripe'
 
 /**
+ * Mark instances stuck in 'provisioning' for more than 5 minutes as 'error'.
+ * This prevents agents from being stuck forever if the provisioner fails.
+ */
+async function markStuckInstancesAsError(userId: string) {
+  const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000)
+  const stuck = await prisma.instance.findMany({
+    where: {
+      ownerId: userId,
+      status: 'provisioning',
+      updatedAt: { lt: fiveMinutesAgo },
+    },
+  })
+  for (const instance of stuck) {
+    await prisma.instance.update({
+      where: { id: instance.id },
+      data: { status: 'error' },
+    })
+    console.log(`Marked instance ${instance.id} as error (stuck provisioning >5min)`)
+  }
+}
+
+/**
  * GET /api/agents — List user's agent instances with tier limit info
  */
 export async function GET() {
@@ -13,6 +35,9 @@ export async function GET() {
   if (!session?.user?.id) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
+
+  // Check for stuck provisioning instances (>5 min → error)
+  await markStuckInstancesAsError(session.user.id)
 
   const [instances, subscription] = await Promise.all([
     prisma.instance.findMany({

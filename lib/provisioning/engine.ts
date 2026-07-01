@@ -250,6 +250,11 @@ export async function callProvisioner(instance: {
     if (!res.ok) {
       const err = await res.json().catch(() => ({}))
       console.error(`Provisioner error: ${JSON.stringify(err)}`)
+      // Mark instance as error so user can retry
+      await prisma.instance.update({
+        where: { id: instance.id },
+        data: { status: 'error' },
+      })
       return false
     }
 
@@ -268,6 +273,11 @@ export async function callProvisioner(instance: {
     return result
   } catch (err) {
     console.error(`Failed to call provisioner: ${err}`)
+    // Mark instance as error instead of leaving it stuck in provisioning forever
+    await prisma.instance.update({
+      where: { id: instance.id },
+      data: { status: 'error' },
+    })
     return false
   }
 }
