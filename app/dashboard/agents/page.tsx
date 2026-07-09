@@ -214,9 +214,12 @@ export default function AgentsPage() {
             >
               <div className="flex items-start justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-semibold text-white">
+                  <a
+                    href={`/dashboard/agents/${agent.id}`}
+                    className="text-lg font-semibold text-white hover:underline"
+                  >
                     {agent.name || `Agent ${agent.id.slice(0, 8)}`}
-                  </h3>
+                  </a>
                   <p className="text-sm text-zinc-500 mt-0.5">
                     ID: {agent.id}
                   </p>
@@ -270,6 +273,12 @@ export default function AgentsPage() {
                   className="rounded-lg border border-zinc-700 px-3 py-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
                 >
                   {agent.hasTelegram ? 'Manage Channels' : 'Connect Telegram'}
+                </a>
+                <a
+                  href={`/dashboard/agents/${agent.id}`}
+                  className="rounded-lg border border-zinc-700 px-3 py-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
+                >
+                  Settings
                 </a>
                 <button
                   onClick={() => deleteAgent(agent.id)}

@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { generateApiKey } from '@/lib/provisioning/engine'
 
 /**
  * GET /api/agents/[id] — Get agent instance details
@@ -40,7 +41,8 @@ export async function GET(
 }
 
 /**
- * PATCH /api/agents/[id] — Update agent (name, model config)
+ * PATCH /api/agents/[id] — Update agent (name, model config, API key regeneration)
+ * Body: { name?: string, regenerateApiKey?: boolean }
  */
 export async function PATCH(
   request: NextRequest,
@@ -65,6 +67,7 @@ export async function PATCH(
 
   const updateData: Record<string, any> = {}
   if (body.name !== undefined) updateData.name = body.name
+  if (body.regenerateApiKey === true) updateData.apiKey = generateApiKey()
 
   const updated = await prisma.instance.update({
     where: { id },

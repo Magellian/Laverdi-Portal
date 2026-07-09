@@ -35,7 +35,7 @@ function generatePairingToken(): string {
 /**
  * Generate an API key for the user to access their agent externally.
  */
-function generateApiKey(): string {
+export function generateApiKey(): string {
   return `lv_${crypto.randomBytes(32).toString('hex')}`
 }
 
