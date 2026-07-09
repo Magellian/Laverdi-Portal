@@ -3,7 +3,13 @@ import type Stripe from 'stripe'
 import { prisma } from '@/lib/prisma'
 import { stripe, getTierFromPriceId } from '@/lib/stripe'
 import { provisionAgent, callProvisioner } from '@/lib/provisioning/engine'
-import { sendWelcomeEmail } from '@/lib/email'
+import {
+  sendWelcomeEmail,
+  sendPaymentFailedEmail,
+  sendTrialEndingEmail,
+  sendCancellationEmail,
+  sendInvoiceEmail,
+} from '@/lib/email'
 
 /** Safely extract period dates from a Stripe subscription object */
 function extractPeriodDates(sub: any): {
@@ -127,6 +133,10 @@ export async function POST(request: NextRequest) {
             if (customerEmail) {
               const tierName = tier.charAt(0).toUpperCase() + tier.slice(1)
               await sendWelcomeEmail(customerEmail, tierName, provisionResult.apiKey)
+
+              if (typeof session.amount_total === 'number' && session.currency) {
+                await sendInvoiceEmail(customerEmail, tierName, session.amount_total, session.currency)
+              }
             }
           }
         }
@@ -153,16 +163,42 @@ export async function POST(request: NextRequest) {
         })
 
         console.log(`✓ Subscription updated: ${sub.id} → ${sub.status} (${tier})`)
+
+        if (sub.status === 'trialing' && typeof sub.trial_end === 'number') {
+          const trialEndDate = new Date(sub.trial_end * 1000)
+          const daysUntilEnd = (trialEndDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+
+          if (daysUntilEnd <= 3) {
+            const customerId = sub.customer as string
+            const user = await prisma.user.findUnique({ where: { stripeCustomerId: customerId } })
+            if (user?.email) {
+              const tierName = tier.charAt(0).toUpperCase() + tier.slice(1)
+              await sendTrialEndingEmail(user.email, tierName, trialEndDate)
+            }
+          }
+        }
+
         break
       }
 
       case 'customer.subscription.deleted': {
         const sub = event.data.object as Stripe.Subscription
+        const delPriceId = sub.items.data[0]?.price?.id || ''
+        const delTier = getTierFromPriceId(delPriceId)
 
         await prisma.subscription.updateMany({
           where: { stripeSubscriptionId: sub.id },
           data: { status: 'canceled' },
         })
+
+        {
+          const customerId = sub.customer as string
+          const user = await prisma.user.findUnique({ where: { stripeCustomerId: customerId } })
+          if (user?.email) {
+            const tierName = delTier.charAt(0).toUpperCase() + delTier.slice(1)
+            await sendCancellationEmail(user.email, tierName)
+          }
+        }
 
         console.log(`✓ Subscription cancelled: ${sub.id}`)
         // TODO: Schedule container teardown (WP3)
@@ -179,6 +215,19 @@ export async function POST(request: NextRequest) {
             data: { status: 'past_due' },
           })
           console.log(`⚠ Payment failed for subscription: ${subscriptionId}`)
+
+          const failedSub = await prisma.subscription.findUnique({
+            where: { stripeSubscriptionId: subscriptionId },
+          })
+          const customerId = (invoice.customer as string) || failedSub?.stripeCustomerId
+          if (customerId) {
+            const user = await prisma.user.findUnique({ where: { stripeCustomerId: customerId } })
+            if (user?.email) {
+              const tier = failedSub?.tier || 'starter'
+              const tierName = tier.charAt(0).toUpperCase() + tier.slice(1)
+              await sendPaymentFailedEmail(user.email, tierName)
+            }
+          }
         }
         break
       }
