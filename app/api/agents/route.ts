@@ -52,6 +52,8 @@ export async function GET() {
         modelPrimary: true,
         modelFallback: true,
         telegramBotToken: true,
+        discordBotToken: true,
+        slackBotToken: true,
         createdAt: true,
         updatedAt: true,
       },
@@ -74,7 +76,11 @@ export async function GET() {
   const instancesWithFlags = instances.map((i) => ({
     ...i,
     hasTelegram: !!i.telegramBotToken,
+    hasDiscord: !!i.discordBotToken,
+    hasSlack: !!i.slackBotToken,
     telegramBotToken: undefined,
+    discordBotToken: undefined,
+    slackBotToken: undefined,
   }))
 
   return NextResponse.json({
