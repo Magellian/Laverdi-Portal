@@ -168,6 +168,8 @@ model Instance {
   modelFallback  String?  // Fallback model
   name              String?  // User-given name for the agent
   telegramBotToken  String?  // Telegram bot token for this instance
+  discordBotToken   String?  // Discord bot token for this instance
+  slackBotToken     String?  // Slack bot token for this instance
   createdAt         DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
