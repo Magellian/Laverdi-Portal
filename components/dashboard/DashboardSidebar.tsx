@@ -10,6 +10,7 @@ const navItems = [
   { label: 'Your Plan', href: '/dashboard/plan', icon: '💳' },
   { label: 'Agents', href: '/dashboard/agents', icon: '🤖' },
   { label: 'Channels', href: '/dashboard/channels', icon: '🔌' },
+  { label: 'Org', href: '/dashboard/org', icon: '🏢' },
   { label: 'Board', href: '/dashboard/board', icon: '📋' },
   { label: 'Companion App', href: '/dashboard/companion', icon: '⬇️' },
   { label: 'Docs', href: '/dashboard/docs', icon: '📚' },

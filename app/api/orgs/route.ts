@@ -73,3 +73,46 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'Failed to create organization' }, { status: 500 })
   }
 }
+
+export async function PATCH(request: Request) {
+  const ip = request.headers.get('x-forwarded-for') || 'unknown'
+  const limit = rateLimit(ip, 20, 60000)
+
+  if (!limit.allowed) {
+    return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 })
+  }
+
+  const session = await auth()
+
+  if (!session || !session.user?.id) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  try {
+    const { id, name } = await request.json()
+
+    if (!id) {
+      return NextResponse.json({ error: 'Organization id is required' }, { status: 400 })
+    }
+
+    if (!name || name.trim().length === 0) {
+      return NextResponse.json({ error: 'Organization name is required' }, { status: 400 })
+    }
+
+    const existing = await prisma.organization.findUnique({ where: { id } })
+
+    if (!existing || existing.ownerId !== session.user.id) {
+      return NextResponse.json({ error: 'Organization not found' }, { status: 404 })
+    }
+
+    const organization = await prisma.organization.update({
+      where: { id },
+      data: { name: name.trim() },
+    })
+
+    return NextResponse.json(organization)
+  } catch (error) {
+    console.error('Error updating organization:', error)
+    return NextResponse.json({ error: 'Failed to update organization' }, { status: 500 })
+  }
+}
