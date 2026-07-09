@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
+import OnboardingWizard from '@/components/dashboard/OnboardingWizard'
 
 export default async function DashboardPage() {
   const session = await auth()
@@ -89,34 +90,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Getting Started (show only when no agents) */}
-      {agentCount === 0 && (
-        <div className="rounded-xl bg-zinc-800 border border-zinc-700 p-6">
-          <h2 className="text-lg font-semibold text-white mb-4">Getting Started</h2>
-          <ol className="space-y-4">
-            <li className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-white text-black text-sm flex items-center justify-center font-bold">1</span>
-              <div>
-                <p className="text-sm font-medium text-zinc-300">Deploy your first agent</p>
-                <p className="text-sm text-zinc-500">Go to Agents → Deploy New Agent</p>
-              </div>
-            </li>
-            <li className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-zinc-700 text-zinc-400 text-sm flex items-center justify-center font-bold">2</span>
-              <div>
-                <p className="text-sm font-medium text-zinc-500">Connect a messaging platform</p>
-                <p className="text-sm text-zinc-600">Telegram, Discord, or Slack</p>
-              </div>
-            </li>
-            <li className="flex gap-3">
-              <span className="flex-shrink-0 w-6 h-6 rounded-full bg-zinc-700 text-zinc-400 text-sm flex items-center justify-center font-bold">3</span>
-              <div>
-                <p className="text-sm font-medium text-zinc-500">Start chatting with your agent</p>
-                <p className="text-sm text-zinc-600">Available 24/7 on your connected platforms</p>
-              </div>
-            </li>
-          </ol>
-        </div>
-      )}
+      <OnboardingWizard agentCount={agentCount} />
     </div>
   )
 }
