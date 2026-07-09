@@ -12,6 +12,7 @@ const navItems = [
   { label: 'Channels', href: '/dashboard/channels', icon: '🔌' },
   { label: 'Board', href: '/dashboard/board', icon: '📋' },
   { label: 'Companion App', href: '/dashboard/companion', icon: '⬇️' },
+  { label: 'Docs', href: '/dashboard/docs', icon: '📚' },
 ]
 
 export default function DashboardSidebar({ email }: { email: string | null | undefined }) {
