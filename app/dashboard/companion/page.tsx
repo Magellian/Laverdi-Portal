@@ -8,7 +8,6 @@ const platforms = [
       </svg>
     ),
     ext: '.msi',
-    fileName: 'LaVerdi-Companion-Setup.msi',
   },
   {
     name: 'macOS',
@@ -19,7 +18,6 @@ const platforms = [
       </svg>
     ),
     ext: '.dmg',
-    fileName: 'LaVerdi-Companion.dmg',
   },
   {
     name: 'Linux',
@@ -32,7 +30,6 @@ const platforms = [
       </svg>
     ),
     ext: '.AppImage',
-    fileName: 'LaVerdi-Companion.AppImage',
   },
 ]
 
@@ -77,16 +74,15 @@ export default function CompanionPage() {
               <span className="text-lg font-semibold text-white">{platform.name}</span>
             </div>
             <p className="text-sm text-zinc-400 flex-1">{platform.description}</p>
-            <a
-              href={`/downloads/${platform.fileName}`}
-              download
-              className="flex items-center justify-center gap-2 rounded-lg bg-white text-black text-sm font-medium px-4 py-2.5 hover:bg-zinc-100 transition-colors"
+            <button
+              disabled
+              className="flex items-center justify-center gap-2 rounded-lg bg-white text-black text-sm font-medium px-4 py-2.5 opacity-50 cursor-not-allowed"
             >
               <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
-              Download {platform.ext}
-            </a>
+              Coming Soon
+            </button>
           </div>
         ))}
       </div>

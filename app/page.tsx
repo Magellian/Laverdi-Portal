@@ -113,25 +113,25 @@ export default async function Home() {
             <div>
               <h4 className="text-white font-bold mb-4">Product</h4>
               <ul className="space-y-2 text-zinc-400 text-sm">
-                <li><a href="#" className="hover:text-white transition-colors">Features</a></li>
+                <li><a href="#features" className="hover:text-white transition-colors">Features</a></li>
                 <li><a href="/pricing" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Docs</a></li>
+                <li><a href="/dashboard" className="hover:text-white transition-colors">Docs</a></li>
               </ul>
             </div>
             <div>
               <h4 className="text-white font-bold mb-4">Company</h4>
               <ul className="space-y-2 text-zinc-400 text-sm">
-                <li><a href="#" className="hover:text-white transition-colors">About</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Contact</a></li>
+                <li><a href="/about" className="hover:text-white transition-colors">About</a></li>
+                <li><a href="/about" className="hover:text-white transition-colors">Blog</a></li>
+                <li><a href="mailto:support@laverdi.tech" className="hover:text-white transition-colors">Contact</a></li>
               </ul>
             </div>
             <div>
               <h4 className="text-white font-bold mb-4">Legal</h4>
               <ul className="space-y-2 text-zinc-400 text-sm">
-                <li><a href="#" className="hover:text-white transition-colors">Privacy</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Terms</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Security</a></li>
+                <li><a href="/legal/privacy" className="hover:text-white transition-colors">Privacy</a></li>
+                <li><a href="/legal/terms" className="hover:text-white transition-colors">Terms</a></li>
+                <li><a href="/legal/privacy" className="hover:text-white transition-colors">Security</a></li>
               </ul>
             </div>
           </div>
