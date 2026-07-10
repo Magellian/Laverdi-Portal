@@ -1,11 +1,10 @@
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import Email from "next-auth/providers/email"
-import type { Resend } from "resend"
 import { prisma } from "@/lib/prisma"
 
-let _resend: Resend | null = null
-function getResend(): Resend {
+let _resend: any = null
+function getResend(): any {
   if (!_resend) {
     const { Resend: R } = require("resend")
     _resend = new R(process.env.RESEND_API_KEY)

@@ -1,7 +1,5 @@
-import type { Resend } from "resend"
-
-let _resend: Resend | null = null
-function getResend(): Resend {
+let _resend: any = null
+function getResend(): any {
   if (!_resend) {
     const { Resend: R } = require("resend")
     _resend = new R(process.env.RESEND_API_KEY)
