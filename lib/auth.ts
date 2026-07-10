@@ -18,6 +18,7 @@ const authConfig = {
   adapter: PrismaAdapter(prisma),
   providers: [
     Email({
+      server: { host: "localhost", port: 25, auth: { user: "dummy", pass: "dummy" } },
       sendVerificationRequest: async ({ identifier: to, url }) => {
         const { error } = await getResend().emails.send({
           from: `LaVerdi <${process.env.EMAIL_FROM || 'noreply@laverdi.tech'}>`,
