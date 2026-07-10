@@ -258,6 +258,6 @@ class ProvisionerHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    server = HTTPServer(("127.0.0.1", 9090), ProvisionerHandler)
+    server = HTTPServer(("0.0.0.0", 9090), ProvisionerHandler)
     print("LaVerdi Provisioner listening on 127.0.0.1:9090")
     server.serve_forever()
