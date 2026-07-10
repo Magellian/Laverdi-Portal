@@ -244,7 +244,8 @@ def teardown_instance(instance_id):
     service_name = f"hermes-{instance_id}"
     dash_service_name = f"hermes-dash-{instance_id}"
     profile_name = f"user-{instance_id[:10]}"
-    
+    profile_dir = f"{HERMES_HOME}/profiles/{profile_name}"
+
     run_cmd(f"systemctl stop {service_name}", check=False)
     run_cmd(f"systemctl stop {dash_service_name}", check=False)
     run_cmd(f"systemctl disable {service_name}", check=False)
@@ -252,7 +253,27 @@ def teardown_instance(instance_id):
     run_cmd(f"rm -f /etc/systemd/system/{service_name}.service", check=False)
     run_cmd(f"rm -f /etc/systemd/system/{dash_service_name}.service", check=False)
     run_cmd("systemctl daemon-reload")
-    
+
+    # Remove nginx location block
+    import re
+    try:
+        with open("/etc/nginx/hermes-instances.conf", "r") as f:
+            content = f.read()
+        content = re.sub(
+            r"# Hermes Agent - instance " + re.escape(instance_id) + r".*?\n\}",
+            "", content, flags=re.DOTALL
+        )
+        with open("/etc/nginx/hermes-instances.conf", "w") as f:
+            f.write(content)
+        run_cmd("nginx -t", check=False)
+        run_cmd("nginx -s reload", check=False)
+        print(f"[provisioner] Removed nginx route for /agent/{instance_id}/")
+    except Exception as e:
+        print(f"[provisioner] Nginx cleanup failed (non-fatal): {e}")
+
+    # Remove Hermes profile directory
+    run_cmd(f"rm -rf {profile_dir}", check=False)
+
     return {"status": "stopped", "instance_id": instance_id}
 
 
