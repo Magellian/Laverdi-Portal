@@ -9,7 +9,7 @@ import { markInstanceRunning } from '@/lib/provisioning/engine'
  */
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
-  const expectedSecret = process.env.PROVISION_CALLBACK_SECRET || 'laverdi-callback-secret'
+  const expectedSecret = process.env.PROVISION_CALLBACK_SECRET || 'laverdi-callback-xK9m-2026'
 
   if (authHeader !== `Bearer ${expectedSecret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
