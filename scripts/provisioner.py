@@ -141,38 +141,66 @@ WantedBy=multi-user.target
     run_cmd(f"systemctl start {dash_service_name}")
 
     # Add nginx proxy route for this instance
-    nginx_conf = f"""
-# Hermes Agent - instance {instance_id}
-location /agent/{instance_id}/ {{
-    proxy_pass http://127.0.0.1:{port}/;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection "upgrade";
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-    proxy_read_timeout 86400;
-
-    proxy_redirect ~^/(?!agent/|_next/|api/|favicon)(.*)$ /agent/{instance_id}/$1;
-    sub_filter "'/auth/" "'/agent/{instance_id}/auth/";
-    sub_filter '"/auth/" '"/agent/{instance_id}/auth/";
-    sub_filter "href='/login" "href='/agent/{instance_id}/login";
-    sub_filter "window.location.assign('/" "window.location.assign('/agent/{instance_id}/";
-    sub_filter "src='/fonts/" "src='/agent/{instance_id}/fonts/";
-    sub_filter "href='/fonts/" "href='/agent/{instance_id}/fonts/";
-    sub_filter "src=\\"/assets/" "src=\\"/agent/{instance_id}/assets/";
-    sub_filter "href=\\"/assets/" "href=\\"/agent/{instance_id}/assets/";
-    sub_filter "src=\\"/api/" "src=\\"/agent/{instance_id}/api/";
-    sub_filter "__HERMES_BASE_PATH__=\\"\\"" "__HERMES_BASE_PATH__=\\"/agent/{instance_id}\\"";
-
-    # Auto-login for dashboard
-    sub_filter '</head>' '<script>document.addEventListener("DOMContentLoaded",function(){{var f=document.querySelector("form[data-provider=basic]");if(!f)return;f.querySelector("input[name=username]").value="agent";f.querySelector("input[name=password]").value="{dashboard_pw}";f.addEventListener("submit",function(e){{e.preventDefault();e.stopImmediatePropagation();fetch("/agent/{instance_id}/auth/password-login",{{method:"POST",headers:{{"Content-Type":"application/json"}},body:JSON.stringify({{provider:"basic",username:"agent",password:"{dashboard_pw}",next:""}}),credentials:"same-origin"}}).then(function(r){{return r.json()}}).then(function(d){{var t=(d&&d.next)||"/";window.location.href="/agent/{instance_id}/"+t}}).catch(function(){{window.location.href="/agent/{instance_id}/"}})}},true);setTimeout(function(){{f.dispatchEvent(new Event("submit",{{cancelable:true}}))}},100)}});</script></head>';
-
-    sub_filter_once off;
-    sub_filter_types text/html;
-}}
-"""
+    # Build using string concatenation (not f-strings) to avoid escaping hell
+    _I = instance_id
+    _P = str(port)
+    _W = dashboard_pw
+    nginx_lines = [
+        "",
+        f"# Hermes Agent - instance {_I}",
+        f"location /agent/{_I}/ {{",
+        f"    proxy_pass http://127.0.0.1:{_P}/;",
+        "    proxy_http_version 1.1;",
+        "    proxy_set_header Upgrade $http_upgrade;",
+        '    proxy_set_header Connection "upgrade";',
+        "    proxy_set_header Host $host;",
+        "    proxy_set_header X-Real-IP $remote_addr;",
+        "    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;",
+        "    proxy_set_header X-Forwarded-Proto $scheme;",
+        "    proxy_read_timeout 86400;",
+        "",
+        f"    proxy_redirect ~^/(?!agent/|_next/|api/|favicon)(.*)$ /agent/{_I}/$1;",
+        "",
+        f'    sub_filter "\'/auth/" "\'/agent/{_I}/auth/";',
+        f'    sub_filter \'"/auth/"\' \'"/agent/{_I}/auth/"\';',
+        f'    sub_filter "href=\'/login" "href=\'/agent/{_I}/login";',
+        f'    sub_filter "window.location.assign(\'/" "window.location.assign(\'/agent/{_I}/";',
+        f'    sub_filter "src=\'/fonts/" "src=\'/agent/{_I}/fonts/";',
+        f'    sub_filter "href=\'/fonts/" "href=\'/agent/{_I}/fonts/";',
+        f'    sub_filter "src=\\"/assets/" "src=\\"/agent/{_I}/assets/";',
+        f'    sub_filter "href=\\"/assets/" "href=\\"/agent/{_I}/assets/";',
+        f'    sub_filter "src=\\"/api/" "src=\\"/agent/{_I}/api/";',
+        f'    sub_filter "__HERMES_BASE_PATH__=\\"\\"" "__HERMES_BASE_PATH__=\\"/agent/{_I}\\"";',
+        "",
+        # Auto-login JS — built carefully to avoid nginx syntax conflicts
+        '    sub_filter "</head>" "<script>document.addEventListener(\\"DOMContentLoaded\\",function(){'
+        'var f=document.querySelector(\\"form[data-provider=basic]\\");'
+        'if(!f)return;'
+        'f.querySelector(\\"input[name=username]\\").value=\\"agent\\";'
+        f'f.querySelector(\\"input[name=password]\\").value=\\"{_W}\\";'
+        'f.addEventListener(\\"submit\\",function(e){'
+        'e.preventDefault();e.stopImmediatePropagation();'
+        f'fetch(\\"/agent/{_I}/auth/password-login\\",{{'
+        'method:\\"POST\\",'
+        'headers:{{\\"Content-Type\\":\\"application/json\\"}},'
+        f'body:JSON.stringify({{provider:\\"basic\\",username:\\"agent\\",password:\\"{_W}\\",next:\\"\\"}}),'
+        'credentials:\\"same-origin\\"'
+        '}).then(function(r){return r.json()}).then(function(d){'
+        f'var t=(d&&d.next)||\\"/\\";window.location.href=\\"/agent/{_I}/\\"+t'
+        '}).catch(function(){'
+        f'window.location.href=\\"/agent/{_I}/\\"'
+        '})'
+        '},true);'
+        'setTimeout(function(){'
+        'f.dispatchEvent(new Event(\\"submit\\",{cancelable:true}))'
+        '},100)'
+        '});</script></head>";',
+        "",
+        "    sub_filter_once off;",
+        "    sub_filter_types text/html;",
+        "}",
+    ]
+    nginx_conf = "\n".join(nginx_lines)
     with open("/etc/nginx/hermes-instances.conf", "a") as f:
         f.write(nginx_conf)
     run_cmd("nginx -t", check=True)
