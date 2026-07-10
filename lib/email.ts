@@ -1,11 +1,18 @@
-import { Resend } from "resend"
+import type { Resend } from "resend"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function getResend(): Resend {
+  if (!_resend) {
+    const { Resend: R } = require("resend")
+    _resend = new R(process.env.RESEND_API_KEY)
+  }
+  return _resend
+}
 const from = process.env.EMAIL_FROM || "noreply@laverdi.tech"
 
 async function send(to: string, subject: string, html: string, label: string) {
   try {
-    const { error } = await resend.emails.send({ from, to, subject, html })
+    const { error } = await getResend().emails.send({ from, to, subject, html })
     if (error) {
       console.error(`Resend error (${label} to ${to}):`, error)
       return

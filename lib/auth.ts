@@ -1,10 +1,17 @@
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import Email from "next-auth/providers/email"
-import { Resend } from "resend"
+import type { Resend } from "resend"
 import { prisma } from "@/lib/prisma"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+let _resend: Resend | null = null
+function getResend(): Resend {
+  if (!_resend) {
+    const { Resend: R } = require("resend")
+    _resend = new R(process.env.RESEND_API_KEY)
+  }
+  return _resend
+}
 
 const authConfig = {
   trustHost: true,
@@ -13,7 +20,7 @@ const authConfig = {
   providers: [
     Email({
       sendVerificationRequest: async ({ identifier: to, url }) => {
-        const { error } = await resend.emails.send({
+        const { error } = await getResend().emails.send({
           from: `LaVerdi <${process.env.EMAIL_FROM || 'noreply@laverdi.tech'}>`,
           to,
           subject: "Sign in to LaVerdi",
