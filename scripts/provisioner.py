@@ -139,7 +139,46 @@ WantedBy=multi-user.target
     run_cmd(f"systemctl start {service_name}")
     run_cmd(f"systemctl enable {dash_service_name}")
     run_cmd(f"systemctl start {dash_service_name}")
-    
+
+    # Add nginx proxy route for this instance
+    nginx_conf = f"""
+# Hermes Agent - instance {instance_id}
+location /agent/{instance_id}/ {{
+    proxy_pass http://127.0.0.1:{port}/;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_read_timeout 86400;
+
+    proxy_redirect ~^/(?!agent/|_next/|api/|favicon)(.*)$ /agent/{instance_id}/$1;
+    sub_filter "'/auth/" "'/agent/{instance_id}/auth/";
+    sub_filter '"/auth/" '"/agent/{instance_id}/auth/";
+    sub_filter "href='/login" "href='/agent/{instance_id}/login";
+    sub_filter "window.location.assign('/" "window.location.assign('/agent/{instance_id}/";
+    sub_filter "src='/fonts/" "src='/agent/{instance_id}/fonts/";
+    sub_filter "href='/fonts/" "href='/agent/{instance_id}/fonts/";
+    sub_filter "src=\\"/assets/" "src=\\"/agent/{instance_id}/assets/";
+    sub_filter "href=\\"/assets/" "href=\\"/agent/{instance_id}/assets/";
+    sub_filter "src=\\"/api/" "src=\\"/agent/{instance_id}/api/";
+    sub_filter "__HERMES_BASE_PATH__=\\"\\"" "__HERMES_BASE_PATH__=\\"/agent/{instance_id}\\"";
+
+    # Auto-login for dashboard
+    sub_filter '</head>' '<script>document.addEventListener("DOMContentLoaded",function(){{var f=document.querySelector("form[data-provider=basic]");if(!f)return;f.querySelector("input[name=username]").value="agent";f.querySelector("input[name=password]").value="{dashboard_pw}";f.addEventListener("submit",function(e){{e.preventDefault();e.stopImmediatePropagation();fetch("/agent/{instance_id}/auth/password-login",{{method:"POST",headers:{{"Content-Type":"application/json"}},body:JSON.stringify({{provider:"basic",username:"agent",password:"{dashboard_pw}",next:""}}),credentials:"same-origin"}}).then(function(r){{return r.json()}}).then(function(d){{var t=(d&&d.next)||"/";window.location.href="/agent/{instance_id}/"+t}}).catch(function(){{window.location.href="/agent/{instance_id}/"}})}},true);setTimeout(function(){{f.dispatchEvent(new Event("submit",{{cancelable:true}}))}},100)}});</script></head>';
+
+    sub_filter_once off;
+    sub_filter_types text/html;
+}}
+"""
+    with open("/etc/nginx/hermes-instances.conf", "a") as f:
+        f.write(nginx_conf)
+    run_cmd("nginx -t", check=True)
+    run_cmd("nginx -s reload", check=False)
+    print(f"[provisioner] Added nginx route for /agent/{instance_id}/")
+
     # Notify portal
     try:
         import urllib.request

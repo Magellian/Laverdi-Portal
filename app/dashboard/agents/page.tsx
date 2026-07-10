@@ -260,7 +260,7 @@ export default function AgentsPage() {
               <div className="flex gap-3">
                 {agent.status === 'running' && agent.port && (
                   <a
-                    href={`${window.location.protocol}//${window.location.hostname}:${agent.port}/`}
+                    href={`/agent/${agent.id}/`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="rounded-lg bg-white text-black px-3 py-1.5 text-sm font-medium hover:bg-zinc-100 transition-colors"
