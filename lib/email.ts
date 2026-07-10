@@ -1,14 +1,21 @@
-import nodemailer from 'nodemailer'
+import { Resend } from "resend"
 
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_SERVER_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.EMAIL_SERVER_PORT || '587'),
-  secure: false,
-  auth: {
-    user: process.env.EMAIL_SERVER_USER,
-    pass: process.env.EMAIL_SERVER_PASSWORD,
-  },
-})
+const resend = new Resend(process.env.RESEND_API_KEY)
+const from = process.env.EMAIL_FROM || "noreply@laverdi.tech"
+
+async function send(to: string, subject: string, html: string, label: string) {
+  try {
+    const { error } = await resend.emails.send({ from, to, subject, html })
+    if (error) {
+      console.error(`Resend error (${label} to ${to}):`, error)
+      return
+    }
+    console.log(`✉ ${label} sent to ${to}`)
+  } catch (err) {
+    console.error(`Failed to send ${label} to ${to}:`, err)
+    // Don't throw — email failure shouldn't break the calling flow
+  }
+}
 
 export async function sendWelcomeEmail(
   to: string,
@@ -97,18 +104,7 @@ export async function sendWelcomeEmail(
 </html>
   `.trim()
 
-  try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM || 'noreply@laverdi.tech',
-      to,
-      subject,
-      html,
-    })
-    console.log(`✉ Welcome email sent to ${to}`)
-  } catch (err) {
-    console.error(`Failed to send welcome email to ${to}:`, err)
-    // Don't throw — email failure shouldn't break the signup flow
-  }
+  await send(to, subject, html, "Welcome email")
 }
 
 /** Shared dark-theme shell for transactional emails (payment/billing notices) */
@@ -151,21 +147,6 @@ function transactionalShell(title: string, subtitle: string, bodyHtml: string) {
   `.trim()
 }
 
-async function sendTransactionalEmail(to: string, subject: string, html: string, label: string) {
-  try {
-    await transporter.sendMail({
-      from: process.env.EMAIL_FROM || 'noreply@laverdi.tech',
-      to,
-      subject,
-      html,
-    })
-    console.log(`✉ ${label} sent to ${to}`)
-  } catch (err) {
-    console.error(`Failed to send ${label} to ${to}:`, err)
-    // Don't throw — email failure shouldn't break the webhook
-  }
-}
-
 export async function sendPaymentFailedEmail(to: string, tierName: string) {
   const subject = `Payment failed for your LaVerdi ${tierName} plan`
 
@@ -180,7 +161,7 @@ export async function sendPaymentFailedEmail(to: string, tierName: string) {
   `
 
   const html = transactionalShell('Payment failed', `We couldn't charge your card for the ${tierName} plan.`, bodyHtml)
-  await sendTransactionalEmail(to, subject, html, 'Payment failed email')
+  await send(to, subject, html, 'Payment failed email')
 }
 
 export async function sendTrialEndingEmail(to: string, tierName: string, trialEndDate: Date) {
@@ -202,7 +183,7 @@ export async function sendTrialEndingEmail(to: string, tierName: string, trialEn
   `
 
   const html = transactionalShell('Your trial is ending soon', `Your ${tierName} trial ends on ${formattedDate}.`, bodyHtml)
-  await sendTransactionalEmail(to, subject, html, 'Trial ending email')
+  await send(to, subject, html, 'Trial ending email')
 }
 
 export async function sendCancellationEmail(to: string, tierName: string) {
@@ -216,7 +197,7 @@ export async function sendCancellationEmail(to: string, tierName: string) {
   `
 
   const html = transactionalShell('Subscription canceled', `Your ${tierName} plan has been canceled.`, bodyHtml)
-  await sendTransactionalEmail(to, subject, html, 'Cancellation email')
+  await send(to, subject, html, 'Cancellation email')
 }
 
 export async function sendInvoiceEmail(
@@ -246,5 +227,5 @@ export async function sendInvoiceEmail(
   `
 
   const html = transactionalShell('Payment receipt', `Thanks for your payment of ${formattedAmount}.`, bodyHtml)
-  await sendTransactionalEmail(to, subject, html, 'Invoice email')
+  await send(to, subject, html, 'Invoice email')
 }

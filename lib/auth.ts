@@ -1,7 +1,10 @@
 import NextAuth from "next-auth"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import Email from "next-auth/providers/email"
+import { Resend } from "resend"
 import { prisma } from "@/lib/prisma"
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 const authConfig = {
   trustHost: true,
@@ -9,15 +12,31 @@ const authConfig = {
   adapter: PrismaAdapter(prisma),
   providers: [
     Email({
-      server: {
-        host: process.env.EMAIL_SERVER_HOST,
-        port: parseInt(process.env.EMAIL_SERVER_PORT || "587"),
-        auth: {
-          user: process.env.EMAIL_SERVER_USER,
-          pass: process.env.EMAIL_SERVER_PASSWORD,
-        },
+      sendVerificationRequest: async ({ identifier: to, url }) => {
+        const { error } = await resend.emails.send({
+          from: `LaVerdi <${process.env.EMAIL_FROM || 'noreply@laverdi.tech'}>`,
+          to,
+          subject: "Sign in to LaVerdi",
+          html: `
+            <!DOCTYPE html>
+            <html>
+            <head><meta charset="utf-8"></head>
+            <body style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#000;color:#d4d4d8;padding:40px 24px">
+              <div style="max-width:480px;margin:0 auto;text-align:center">
+                <h1 style="color:#fff;font-size:24px;margin:0 0 8px">Sign in to LaVerdi</h1>
+                <p style="color:#a1a1aa;font-size:15px;margin:0 0 32px">Click the button below to sign in.</p>
+                <a href="${url}" style="display:inline-block;background:#fff;color:#000;padding:12px 32px;border-radius:8px;font-weight:600;font-size:15px;text-decoration:none">Sign In</a>
+                <p style="color:#52525b;font-size:12px;margin-top:32px">If you didn't request this email, you can ignore it.</p>
+              </div>
+            </body>
+            </html>
+          `,
+        })
+        if (error) {
+          console.error("Resend verification email failed:", error)
+          throw new Error("Failed to send verification email")
+        }
       },
-      from: process.env.EMAIL_FROM,
     }),
   ],
   pages: {
