@@ -54,6 +54,7 @@ const authConfig = {
     async session({ session, user }: any) {
       if (session) {
         session.user.id = user.id
+        session.user.role = user.role
       }
       return session
     },

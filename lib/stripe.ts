@@ -1,6 +1,23 @@
 import Stripe from 'stripe'
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '')
+// Lazy-init Stripe so the SDK isn't constructed at module load / build time
+// (it throws when STRIPE_SECRET_KEY is absent). Mirrors the lazy Resend init
+// in lib/auth.ts. The exported proxy keeps existing `stripe.*` call sites working.
+let _stripe: Stripe | null = null
+function getStripe(): Stripe {
+  if (!_stripe) {
+    _stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '')
+  }
+  return _stripe
+}
+
+export const stripe = new Proxy({} as Stripe, {
+  get(_target, prop) {
+    const client = getStripe()
+    const value = (client as any)[prop]
+    return typeof value === 'function' ? value.bind(client) : value
+  },
+})
 
 // Map Stripe price IDs to tier names
 const PRICE_TO_TIER: Record<string, string> = {
