@@ -1,20 +1,27 @@
 #!/bin/bash
 # Fix Hermes profile to use Vultr Serverless Inference
+#
+# One-off operational script from initial setup. Reads secrets from this
+# script's own environment instead of hardcoding them — export
+# VULTR_INFERENCE_KEY and DASHBOARD_PASSWORD_HASH before running.
+set -e
+: "${VULTR_INFERENCE_KEY:?Set VULTR_INFERENCE_KEY before running}"
+: "${DASHBOARD_PASSWORD_HASH:?Set DASHBOARD_PASSWORD_HASH before running}"
 
-cat > /root/.hermes/profiles/user-cmqx0egxq/config.yaml << 'EOF'
+cat > /root/.hermes/profiles/user-cmqx0egxq/config.yaml << EOF
 model: deepseek-v4-flash
 providers:
   openai:
-    apiKey: 5Q6AQULLLXA37KCIHRS2ZJIFEVE2VI6AXTJA
+    apiKey: ${VULTR_INFERENCE_KEY}
     baseUrl: https://api.vultrinference.com/v1
 dashboard:
   basic_auth:
     username: admin
-    password_hash: scrypt$16384$8$1$34Y23YZEt//hRtd7rmjcGQ==$h1T+O1eCQw4j6spmiz3CTAURMCN/VORCp7bs3OOJK30=
+    password_hash: ${DASHBOARD_PASSWORD_HASH}
 EOF
 
-cat > /root/.hermes/profiles/user-cmqx0egxq/.env << 'EOF'
-OPENAI_API_KEY=5Q6AQULLLXA37KCIHRS2ZJIFEVE2VI6AXTJA
+cat > /root/.hermes/profiles/user-cmqx0egxq/.env << EOF
+OPENAI_API_KEY=${VULTR_INFERENCE_KEY}
 OPENAI_BASE_URL=https://api.vultrinference.com/v1
 GATEWAY_ALLOW_ALL_USERS=true
 HERMES_DASHBOARD=true

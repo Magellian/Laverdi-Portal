@@ -1,12 +1,19 @@
 #!/bin/bash
 # Add Telegram bot token to Hermes profile
+#
+# One-off operational script from initial setup. Reads secrets from this
+# script's own environment instead of hardcoding them — export
+# VULTR_INFERENCE_KEY and TELEGRAM_BOT_TOKEN before running.
+set -e
+: "${VULTR_INFERENCE_KEY:?Set VULTR_INFERENCE_KEY before running}"
+: "${TELEGRAM_BOT_TOKEN:?Set TELEGRAM_BOT_TOKEN before running}"
 
-cat > /root/.hermes/profiles/user-cmqx0egxq/.env << 'EOF'
-OPENAI_API_KEY=5Q6AQULLLXA37KCIHRS2ZJIFEVE2VI6AXTJA
+cat > /root/.hermes/profiles/user-cmqx0egxq/.env << EOF
+OPENAI_API_KEY=${VULTR_INFERENCE_KEY}
 OPENAI_BASE_URL=https://api.vultrinference.com/v1
 GATEWAY_ALLOW_ALL_USERS=true
 HERMES_DASHBOARD=true
-TELEGRAM_BOT_TOKEN=8950101342:AAGnAM-CbHg0P2RqNScsd-Hv26fGvni9aJA
+TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
 EOF
 
 # Restart gateway to pick up Telegram

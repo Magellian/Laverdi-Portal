@@ -22,9 +22,14 @@ echo "📥 Cloning repository..."
 $SSH_CMD "cd /app && git clone https://github.com/Magellian/laverdi-portal.git" || $SSH_CMD "cd /app/laverdi-portal && git pull"
 
 echo "📝 Setting up environment..."
+# NOTE: this script is a legacy bootstrap from an earlier deployment approach
+# (different VPS IP/SSH key than the current production host — see CLAUDE.md
+# for the current architecture) and is not part of the current deploy path.
+# All secrets below are read from this script's own environment rather than
+# hardcoded, so running it requires exporting them first.
 $SSH_CMD "cat > /app/laverdi-portal/.env.production << 'EOF'
-DATABASE_URL=postgresql://laverdi:laverdi-prod-2026-xK9m@db:5432/laverdi
-POSTGRES_PASSWORD=laverdi-prod-2026-xK9m
+DATABASE_URL=${DATABASE_URL}
+POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
 NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
 NEXTAUTH_URL=https://laverdi.tech
 STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY}
@@ -38,7 +43,7 @@ EMAIL_SERVER_PORT=${EMAIL_SERVER_PORT}
 EMAIL_SERVER_USER=${EMAIL_SERVER_USER}
 EMAIL_SERVER_PASSWORD=${EMAIL_SERVER_PASSWORD}
 EMAIL_FROM=${EMAIL_FROM}
-PROVISION_CALLBACK_SECRET=laverdi-callback-xK9m-2026
+PROVISION_CALLBACK_SECRET=${PROVISION_CALLBACK_SECRET}
 NODE_ENV=production
 PORT=3000
 EOF"
