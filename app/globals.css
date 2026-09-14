@@ -1,0 +1,110 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a1628;
+  --foreground: #ffffff;
+  --surface: #0f1f3d;
+  --surface-hover: #162d54;
+  --primary: #2563eb;
+  --primary-glow: #3b82f6;
+  --accent: #e2b04a;
+  --accent-glow: #f0c870;
+  --muted: #94a3b8;
+  --border: #1e3a5f;
+  --border-hover: #3b82f6;
+  --success: #10b981;
+  --danger: #ef4444;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-hover: var(--surface-hover);
+  --color-primary: var(--primary);
+  --color-primary-glow: var(--primary-glow);
+  --color-accent: var(--accent);
+  --color-accent-glow: var(--accent-glow);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
+  --color-success: var(--success);
+  --color-danger: var(--danger);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Greek meander (key) pattern — used as subtle dividers */
+.greek-divider {
+  height: 12px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--accent) 0px,
+    var(--accent) 2px,
+    transparent 2px,
+    transparent 8px,
+    var(--accent) 8px,
+    var(--accent) 10px,
+    transparent 10px,
+    transparent 16px,
+    var(--accent) 16px,
+    var(--accent) 18px,
+    transparent 18px,
+    transparent 24px
+  );
+  opacity: 0.3;
+}
+
+/* Ionic column silhouette — decorative vertical element */
+.ionic-column {
+  position: relative;
+  width: 4px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    var(--accent) 10%,
+    var(--accent) 15%,
+    transparent 20%,
+    var(--accent) 25%,
+    var(--accent) 85%,
+    transparent 90%,
+    var(--accent) 90%,
+    var(--accent) 95%,
+    transparent 100%
+  );
+  opacity: 0.15;
+}
+
+/* Gold accent glow */
+.gold-glow {
+  box-shadow: 0 0 20px rgba(226, 176, 74, 0.3), 0 0 60px rgba(226, 176, 74, 0.1);
+}
+
+/* Blue glow */
+.blue-glow {
+  box-shadow: 0 0 20px rgba(37, 99, 235, 0.3), 0 0 60px rgba(37, 99, 235, 0.1);
+}
+
+/* Subtle marble texture overlay */
+.marble-bg {
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(226, 176, 74, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 20%, rgba(37, 99, 235, 0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 80%, rgba(37, 99, 235, 0.03) 0%, transparent 50%);
+}
+
+/* Animated floating effect for hero icon */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif);
+}
