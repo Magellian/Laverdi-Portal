@@ -51,7 +51,7 @@ async function allocatePort(): Promise<number> {
 /**
  * Generate a secure pairing token for OpenClaw device auto-approval.
  */
-function generatePairingToken(): string {
+export function generatePairingToken(): string {
   return crypto.randomBytes(24).toString('hex')
 }
 

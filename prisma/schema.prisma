@@ -173,17 +173,39 @@ model Instance {
   telegramBotToken  String?  // Telegram bot token for this instance
   discordBotToken   String?  // Discord bot token for this instance
   slackBotToken     String?  // Slack bot token for this instance
+  companionStatus   String   @default("unpaired") // 'unpaired' | 'paired' | 'offline'
+  companionLastSeen DateTime? // last heartbeat from the paired local companion app
+  delegationPolicy  String   @default("ask") // 'ask' | 'auto_trusted' | 'auto_all' | 'server_only'
   createdAt         DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   // Relations
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   owner     User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  delegatedJobs DelegatedJob[]
 
   @@index([workspaceId])
   @@index([ownerId])
   @@unique([port])
   @@map("instance")
+}
+
+// Audit trail for actions the VPS sandbox delegated to a paired local
+// companion app (installs, arbitrary exec, render jobs). See
+// hermes-hybrid-companion-design.md section 5.
+model DelegatedJob {
+  id            String   @id @default(cuid())
+  instanceId    String
+  kind          String   // 'install_package' | 'run_command' | 'render_job'
+  requestedAt   DateTime @default(now())
+  status        String   @default("pending") // 'pending' | 'approved' | 'denied' | 'completed' | 'failed'
+  approvedBy    String?  // user id, if a human approved it
+  resultSummary String?
+
+  instance Instance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+
+  @@index([instanceId])
+  @@map("delegated_job")
 }
 
 // Discount / promo codes (managed by admins)
