@@ -70,6 +70,7 @@ def provision_instance(instance_id, port, tier, telegram_token=None):
     profile_name = f"user-{instance_id[:10]}"
     profile_dir = f"{HERMES_HOME}/profiles/{profile_name}"
     model = TIER_MODELS.get(tier, DEFAULT_MODEL)
+    tunnel_port = 20000 + (int(port) - 9000) * 2
     
     # Generate dashboard password
     dashboard_pw = secrets.token_urlsafe(12)
@@ -88,10 +89,26 @@ dashboard:
   basic_auth:
     username: agent
     password_hash: "{pw_hash}"
+terminal:
+  backend: docker
+  container_cpu: 0.5
+  container_memory: 512
+  container_disk: 2048
+  container_persistent: false
+  docker_extra_args:
+    - "--memory-swap"
+    - "512m"
+security:
+  allow_lazy_installs: false
+proxy:
+  enabled: true
+  tunnel_port: {tunnel_port}
+  enforce_on_docker: true
 """
     with open(f"{profile_dir}/config.yaml", "w") as f:
         f.write(config)
     
+
     # Write .env
     env_lines = [
         f"OPENAI_API_KEY={VULTR_API_KEY}",
@@ -105,6 +122,9 @@ dashboard:
     with open(f"{profile_dir}/.env", "w") as f:
         f.write("\n".join(env_lines) + "\n")
     
+    # Configure egress lockdown (per-profile iron-proxy) -- needs OPENAI_API_KEY from .env, so must run after .env write
+    run_cmd(f"{HERMES_BIN} --profile {profile_name} egress setup --tunnel-port {tunnel_port} --restart")
+
     # Create systemd service
     service_name = f"hermes-{instance_id}"
     service_content = f"""[Unit]
@@ -271,6 +291,7 @@ def teardown_instance(instance_id):
     run_cmd(f"rm -f /etc/systemd/system/{service_name}.service", check=False)
     run_cmd(f"rm -f /etc/systemd/system/{dash_service_name}.service", check=False)
     run_cmd("systemctl daemon-reload")
+    run_cmd(f"systemctl reset-failed {service_name} {dash_service_name}", check=False)
 
     # Remove nginx location block
     import re
@@ -288,6 +309,9 @@ def teardown_instance(instance_id):
         print(f"[provisioner] Removed nginx route for /agent/{instance_id}/")
     except Exception as e:
         print(f"[provisioner] Nginx cleanup failed (non-fatal): {e}")
+
+    # Stop this profile's iron-proxy egress process before deleting its config/token
+    run_cmd(f"{HERMES_BIN} --profile {profile_name} egress stop", check=False)
 
     # Remove Hermes profile directory
     run_cmd(f"rm -rf {profile_dir}", check=False)
