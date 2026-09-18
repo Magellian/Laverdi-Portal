@@ -201,6 +201,7 @@ model DelegatedJob {
   status        String   @default("pending") // 'pending' | 'approved' | 'denied' | 'completed' | 'failed'
   approvedBy    String?  // user id, if a human approved it
   resultSummary String?
+  payload       String?  // JSON-encoded request details (e.g. {"command": "pip install foo"})
 
   instance Instance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
 

@@ -104,10 +104,30 @@ proxy:
   enabled: true
   tunnel_port: {tunnel_port}
   enforce_on_docker: true
+# Wire this instance's sandboxed terminal to the companion delegation bridge:
+# a blocked install (allow_lazy_installs: false, above) gets handed to
+# the paired local companion app instead of just failing. See
+# hermes-hybrid-companion-design.md section 6 and
+# /usr/local/bin/hermes-delegate.
+hooks_auto_accept: true
+hooks:
+  pre_tool_call:
+    - matcher: "terminal"
+      command: "/usr/local/bin/hermes-delegate hook {instance_id}"
+      timeout: 95
+      fail_closed: false
 """
     with open(f"{profile_dir}/config.yaml", "w") as f:
         f.write(config)
     
+    # Pre-approve the delegation hook's exact command so it fires
+    # under the non-interactive gateway (systemd) without a first-use
+    # TTY prompt -- see hermes hooks doctor / the Consent model docs.
+    delegate_hook_cmd = f"/usr/local/bin/hermes-delegate hook {instance_id}"
+    allowlist = {"approvals": [{"event": "pre_tool_call", "command": delegate_hook_cmd}]}
+    with open(f"{profile_dir}/shell-hooks-allowlist.json", "w") as f:
+        json.dump(allowlist, f)
+
 
     # Write .env
     env_lines = [

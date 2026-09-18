@@ -7,9 +7,14 @@ import crypto from 'crypto'
  * companion app (not the customer's browser session), authenticated by
  * the instance's pairing token in the request body.
  *
- * Bones-only: this just proves liveness and flips companionStatus to
- * 'paired'. It carries no work yet — actual delegated-job dispatch is a
- * later build step (see hermes-hybrid-companion-design.md, section 6).
+ * Also returns any DelegatedJob rows the sandboxed instance has queued up
+ * via /api/agents/[id]/companion/jobs and that are ready for the companion
+ * to act on (status='approved'). Jobs still at status='pending' are
+ * awaiting human approval (dashboard UI is a later step) and are not sent.
+ *
+ * Known bones-stage limitation: there's no claim/lease step, so an
+ * approved job keeps showing up in pendingJobs on every heartbeat until
+ * the companion posts a result for it via .../jobs/[jobId]/result.
  */
 function tokensMatch(a: string, b: string): boolean {
   const bufA = Buffer.from(a)
@@ -44,11 +49,19 @@ export async function POST(
     },
   })
 
+  const jobs = await prisma.delegatedJob.findMany({
+    where: { instanceId: id, status: 'approved' },
+    orderBy: { requestedAt: 'asc' },
+    take: 10,
+  })
+
   return NextResponse.json({
     status: 'ok',
     delegationPolicy: instance.delegationPolicy,
-    // Bones-only: an empty queue for now. A later step will return
-    // pending DelegatedJob rows here for the companion to act on.
-    pendingJobs: [],
+    pendingJobs: jobs.map((j) => ({
+      id: j.id,
+      kind: j.kind,
+      payload: j.payload ? JSON.parse(j.payload) : null,
+    })),
   })
 }
