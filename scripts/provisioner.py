@@ -114,8 +114,18 @@ hooks:
   pre_tool_call:
     - matcher: "terminal"
       command: "/usr/local/bin/hermes-delegate hook {instance_id}"
-      timeout: 95
+      timeout: 115
       fail_closed: false
+plugins:
+  # Hermes's own dispatcher gives up waiting on ANY pre_tool_call hook after
+  # this many seconds regardless of the hook's own `timeout:` above -- the
+  # default is only 30s. hermes-delegate's own internal poll window is 90s
+  # (see submit_and_wait's timeout_s in hermes-delegate hook), so this must
+  # stay comfortably above that or a real approve+run cycle finishes too
+  # late and the agent sees a generic "callback timed out" instead of our
+  # actual delegated result. Found by an end-to-end test against a real
+  # provisioned instance (2026-09-18) -- see Step 6 of the build plan.
+  hook_callback_timeout: 110
 """
     with open(f"{profile_dir}/config.yaml", "w") as f:
         f.write(config)
