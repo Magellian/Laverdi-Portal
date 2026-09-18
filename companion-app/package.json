@@ -1,0 +1,19 @@
+{
+  "name": "laverdi-companion",
+  "version": "0.2.0-bones",
+  "description": "LaVerdi local companion app -- pairs with a hosted Hermes agent instance, sends heartbeats, and runs delegated install_package/run_command jobs on this machine (render_job not implemented yet).",
+  "private": true,
+  "main": "src/index.js",
+  "bin": {
+    "laverdi-companion": "src/index.js"
+  },
+  "scripts": {
+    "start": "node src/index.js start",
+    "pair": "node src/index.js pair",
+    "status": "node src/index.js status"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED"
+}
