@@ -1,6 +1,6 @@
 export const metadata = {
   title: 'Links | LaVerdi',
-  description: 'LaVerdi — Your AI Agent. Your Computer. Free desktop app + cloud agents.',
+  description: 'LaVerdi — hosted AI agents connected to Telegram, Discord, and Slack.',
 }
 
 export default function LinksPage() {
@@ -17,23 +17,23 @@ export default function LinksPage() {
             </svg>
           </div>
           <h1 className="text-2xl font-bold text-white">LaVerdi</h1>
-          <p className="text-[var(--muted)] text-sm mt-1">Your AI Agent. Your Computer.</p>
+          <p className="text-[var(--muted)] text-sm mt-1">Your AI Agent, Always On.</p>
         </div>
 
         {/* Primary CTA */}
         <a
-          href="/download"
+          href="/pricing"
           className="block w-full bg-[var(--accent)] text-[#0a1628] text-center py-4 rounded-xl font-bold text-lg hover:bg-[var(--accent-glow)] transition-all gold-glow mb-3"
         >
-          🖥️ Download Free Desktop App
+          ☁️ View Plans
         </a>
 
         {/* Secondary links */}
         <a
-          href="/pricing"
+          href="/login"
           className="block w-full bg-[var(--surface)] border border-[var(--border)] text-white text-center py-4 rounded-xl font-semibold hover:border-[var(--accent)] transition-all mb-3"
         >
-          ☁️ Host a Cloud Agent
+          🔑 Log In
         </a>
 
         <a
@@ -41,6 +41,13 @@ export default function LinksPage() {
           className="block w-full bg-[var(--surface)] border border-[var(--border)] text-white text-center py-4 rounded-xl font-semibold hover:border-[var(--accent)] transition-all mb-3"
         >
           ✨ What ChatGPT Can't Do
+        </a>
+
+        <a
+          href="/download"
+          className="block w-full bg-[var(--surface)] border border-[var(--border)] text-white text-center py-4 rounded-xl font-semibold hover:border-[var(--accent)] transition-all mb-3"
+        >
+          🖥️ Companion App
         </a>
 
         <a
@@ -70,7 +77,7 @@ export default function LinksPage() {
         </div>
 
         <p className="text-center text-[var(--muted)] text-xs opacity-60">
-          © 2026 LaVerdi. No signup needed for the desktop app.
+          © 2026 LaVerdi.
         </p>
       </div>
     </div>

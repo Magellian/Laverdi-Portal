@@ -14,18 +14,18 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: 'LaVerdi — Your AI Agent. Your Computer.',
+    default: 'LaVerdi — Your AI Agent, Always On.',
     template: '%s | LaVerdi',
   },
-  description: 'Do what ChatGPT can\'t — clean your files, build apps, automate your desktop. Free desktop AI agent + cloud hosting. No signup required for the desktop app.',
+  description: 'Provision a hosted AI agent in minutes and connect it to Telegram, Discord, or Slack. Pair the optional Companion app when your agent needs to reach your own machine.',
   metadataBase: new URL('https://laverdi.tech'),
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://laverdi.tech',
     siteName: 'LaVerdi',
-    title: 'LaVerdi — Your AI Agent. Your Computer.',
-    description: 'Do what ChatGPT can\'t — clean your files, build apps, automate your desktop. Free desktop AI agent + cloud hosting.',
+    title: 'LaVerdi — Your AI Agent, Always On.',
+    description: 'Provision a hosted AI agent in minutes and connect it to Telegram, Discord, or Slack. Pair the optional Companion app when your agent needs to reach your own machine.',
     images: [
       {
         url: 'https://laverdi.tech/og-image.png',
@@ -37,8 +37,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'LaVerdi — Your AI Agent. Your Computer.',
-    description: 'Do what ChatGPT can\'t — clean your files, build apps, automate your desktop. Free desktop app.',
+    title: 'LaVerdi — Your AI Agent, Always On.',
+    description: 'Provision a hosted AI agent in minutes and connect it to Telegram, Discord, or Slack.',
     images: ['https://laverdi.tech/og-image.png'],
   },
   robots: {

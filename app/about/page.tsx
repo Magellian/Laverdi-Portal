@@ -18,7 +18,7 @@ export default function AboutPage() {
             <span className="text-white font-bold text-lg">LaVerdi</span>
           </a>
           <div className="flex items-center gap-4">
-            <a href="/download" className="text-[var(--muted)] hover:text-[var(--accent)] text-sm transition-colors">Download</a>
+            <a href="/download" className="text-[var(--muted)] hover:text-[var(--accent)] text-sm transition-colors">Companion</a>
             <a href="/pricing" className="text-[var(--muted)] hover:text-[var(--accent)] text-sm transition-colors">Pricing</a>
             <a href="/login" className="bg-[var(--accent)] text-[#0a1628] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[var(--accent-glow)] transition-all">Log In</a>
           </div>
@@ -36,10 +36,9 @@ export default function AboutPage() {
 
         <div className="space-y-6 text-[var(--muted)] leading-relaxed">
           <p>
-            LaVerdi is a managed hosting platform for personal AI agents — plus a free desktop companion app
-            that runs locally on your computer. We handle the infrastructure &mdash; provisioning, inference, uptime &mdash; 
-            so you can focus on what your agent actually does: talk to you and your team on the platforms you 
-            already use, like Telegram, Discord, and Slack.
+            LaVerdi is a managed hosting platform for personal AI agents. We handle the infrastructure &mdash;
+            provisioning, inference, uptime &mdash; so you can focus on what your agent actually does: talk to you
+            and your team on the platforms you already use, like Telegram, Discord, and Slack.
           </p>
           <p>
             Every LaVerdi subscription provisions a dedicated agent instance running on isolated infrastructure,
@@ -48,14 +47,16 @@ export default function AboutPage() {
             and no DevOps required to get running.
           </p>
           <p>
-            The <strong className="text-white">LaVerdi Companion</strong> desktop app is completely free and runs on 
-            your machine. It can scan your filesystem, clean up disk space, manage your apps, and automate your 
-            workflows — all without sending your data anywhere. No account needed. No cloud dependency.
+            The <strong className="text-white">LaVerdi Companion</strong> app is an optional local helper for your
+            hosted agent — a small app you pair with your instance so it can hand off tasks that need your own
+            machine, like installing a package or running a command, under a policy you choose from your dashboard
+            (ask first, act automatically, or keep it server-only). It comes with every subscription and is set up
+            per-agent rather than downloaded on its own.
           </p>
           <p>
             We built LaVerdi because standing up a reliable, always-on AI agent shouldn&apos;t require managing
             servers, API keys, and uptime monitoring yourself. Sign up, subscribe, and your agent is live in
-            minutes. Or download the free desktop app and start right now.
+            minutes — pair Companion afterward, right from your dashboard, if you want it working locally too.
           </p>
         </div>
 

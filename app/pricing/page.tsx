@@ -89,7 +89,7 @@ export default function Pricing() {
             <span className="text-white font-bold text-lg">LaVerdi</span>
           </a>
           <div className="flex items-center gap-4">
-            <a href="/download" className="text-[var(--muted)] hover:text-[var(--accent)] text-sm transition-colors">Download</a>
+            <a href="/download" className="text-[var(--muted)] hover:text-[var(--accent)] text-sm transition-colors">Companion</a>
             <a href="/#features" className="text-[var(--muted)] hover:text-[var(--accent)] text-sm transition-colors">Features</a>
             <a href="/login" className="bg-[var(--accent)] text-[#0a1628] px-4 py-2 rounded-lg text-sm font-semibold hover:bg-[var(--accent-glow)] transition-all">Log In</a>
           </div>
@@ -179,8 +179,8 @@ export default function Pricing() {
               <p className="text-[var(--muted)]">We accept all major credit cards via Stripe.</p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white mb-2">Is the desktop app really free?</h3>
-              <p className="text-[var(--muted)]">Yes! The LaVerdi Companion desktop app is completely free. No account needed.</p>
+              <h3 className="text-lg font-semibold text-white mb-2">Is Companion a separate purchase?</h3>
+              <p className="text-[var(--muted)]">No — Companion comes with every plan. Pair it with any of your agents from your dashboard whenever you want it working locally too.</p>
             </div>
           </div>
         </div>
