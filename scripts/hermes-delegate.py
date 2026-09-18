@@ -81,6 +81,8 @@ def submit_and_wait(instance_id, kind, payload, timeout_s=90, poll_interval=2):
         last_status = job["status"]
         if last_status in ("completed", "failed"):
             return {"status": last_status, "resultSummary": job.get("resultSummary") or ""}
+        if last_status == "denied":
+            return {"status": "denied", "resultSummary": "Denied by an operator on the dashboard."}
 
     if last_status == "pending":
         return {"status": "timeout", "resultSummary": "Still awaiting human approval (delegationPolicy=ask)."}
@@ -136,6 +138,8 @@ def cmd_hook(args):
         message = f"This install was delegated to your local companion app and completed:\n{result['resultSummary']}"
     elif result["status"] == "failed":
         message = f"This install was delegated to your local companion app but failed:\n{result['resultSummary']}"
+    elif result["status"] == "denied":
+        message = f"This install was blocked: {result['resultSummary']}"
     elif result["status"] == "error":
         message = f"Package installs on this instance go through a paired local companion app, and it couldn't be reached: {result['resultSummary']}"
     else:
