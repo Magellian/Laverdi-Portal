@@ -182,7 +182,7 @@ export default function CompanionPage() {
     : '—'
 
   const pairCommand = pairing?.pairingToken && selectedAgent
-    ? `node index.js pair --instance ${selectedAgent} --token ${pairing.pairingToken} --base-url https://laverdi.tech`
+    ? `LaVerdiCompanion.exe pair --instance ${selectedAgent} --token ${pairing.pairingToken} --base-url https://laverdi.tech`
     : null
 
   if (loading) {
@@ -205,9 +205,15 @@ export default function CompanionPage() {
       </div>
 
       <div className="mb-6 rounded-lg bg-amber-500/10 border border-amber-500/20 p-4 text-sm text-amber-300">
-        The companion app is an early, source-only Node.js CLI (Windows first) — there&apos;s no
-        packaged installer yet. Pairing and delegated installs work end-to-end; a system-tray
-        app and other platforms are still to come.
+        The companion app is an early build — a real Windows installer, but it still runs in a
+        console window rather than as a background service (no system tray yet), and macOS/Linux
+        aren&apos;t built. Pairing and delegated installs work end-to-end today.{' '}
+        <a
+          href="/downloads/LaVerdiCompanion-Setup-0.3.0.exe"
+          className="font-semibold underline hover:text-amber-200"
+        >
+          Download for Windows
+        </a>
       </div>
 
       {error && (
@@ -317,7 +323,8 @@ export default function CompanionPage() {
             {pairCommand && (
               <div>
                 <label className="block text-xs text-zinc-500 mb-1.5">
-                  Run this from the companion-app folder on your machine
+                  After installing, choose &quot;Pair LaVerdi Companion&quot; from the Start Menu
+                  and run:
                 </label>
                 <code className="block rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2.5 text-xs text-zinc-300 font-mono break-all">
                   {pairCommand}

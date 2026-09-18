@@ -1,7 +1,7 @@
 {
   "name": "laverdi-companion",
-  "version": "0.2.0-bones",
-  "description": "LaVerdi local companion app -- pairs with a hosted Hermes agent instance, sends heartbeats, and runs delegated install_package/run_command jobs on this machine (render_job not implemented yet).",
+  "version": "0.3.0",
+  "description": "LaVerdi local companion app -- pairs with a hosted Hermes agent instance, sends heartbeats, and runs delegated install_package/run_command jobs on this machine (render_job not implemented yet). Packaged to a standalone Windows .exe via @yao-pkg/pkg -- no Node.js install required.",
   "private": true,
   "main": "src/index.js",
   "bin": {
@@ -10,10 +10,20 @@
   "scripts": {
     "start": "node src/index.js start",
     "pair": "node src/index.js pair",
-    "status": "node src/index.js status"
+    "status": "node src/index.js status",
+    "build:win": "pkg . --targets node22-win-x64 --output dist/LaVerdiCompanion.exe"
   },
   "engines": {
     "node": ">=18"
   },
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@yao-pkg/pkg": "^6.22.0"
+  },
+  "pkg": {
+    "targets": [
+      "node22-win-x64"
+    ],
+    "outputPath": "dist"
+  }
 }

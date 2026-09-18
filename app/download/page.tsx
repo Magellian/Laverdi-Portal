@@ -37,18 +37,27 @@ export default function Download() {
         <div className="bg-[var(--surface)] border border-[var(--border)] rounded-xl p-8 text-center mb-8">
           <h2 className="text-2xl font-bold text-white mb-3">For LaVerdi subscribers</h2>
           <p className="text-[var(--muted)] leading-relaxed mb-6">
-            Companion pairs with a specific agent on your account, so it's set up from your
-            dashboard rather than a generic download — that's also where you choose what it's
-            allowed to do (ask first, act automatically, or stay server-only).
+            Companion pairs with a specific agent on your account, so the pairing step happens
+            from your dashboard rather than a generic download — that's also where you choose
+            what it's allowed to do (ask first, act automatically, or stay server-only).
           </p>
-          <a
-            href="/login"
-            className="inline-block bg-[var(--accent)] text-[#0a1628] px-8 py-3 rounded-lg font-semibold hover:bg-[var(--accent-glow)] transition-all"
-          >
-            Log In to Set Up Companion
-          </a>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center mb-4">
+            <a
+              href="/downloads/LaVerdiCompanion-Setup-0.3.0.exe"
+              className="inline-flex items-center justify-center gap-2 bg-[var(--accent)] text-[#0a1628] px-8 py-3 rounded-lg font-semibold hover:bg-[var(--accent-glow)] transition-all"
+            >
+              Download for Windows
+            </a>
+            <a
+              href="/login"
+              className="inline-flex items-center justify-center gap-2 border border-[var(--border)] text-white px-8 py-3 rounded-lg font-semibold hover:border-[var(--accent)] hover:text-[var(--accent)] transition-all"
+            >
+              Log In to Pair It
+            </a>
+          </div>
           <p className="text-[var(--muted)] text-xs mt-4">
-            Windows is supported today; macOS and Linux are on the roadmap.
+            v0.3.0 · Windows only for now — macOS and Linux are on the roadmap. Runs in a console
+            window rather than as a background service; no system tray yet.
           </p>
         </div>
 
