@@ -1,6 +1,8 @@
 import { cookies } from 'next/headers'
 import { prisma } from '@/lib/prisma'
 import { COOKIE_NAME } from '@/lib/admin-auth'
+import { getSystemSettings } from '@/lib/kill-switch'
+import KillSwitchCard from '@/components/admin/KillSwitchCard'
 
 interface HealthData {
   disk: string
@@ -29,11 +31,12 @@ async function getHealthData(): Promise<{ data: HealthData | null; error: string
 }
 
 export default async function AdminHealthPage() {
-  const [{ data: health, error }, userCount, agentCount, activeSubCount] = await Promise.all([
+  const [{ data: health, error }, userCount, agentCount, activeSubCount, systemSettings] = await Promise.all([
     getHealthData(),
     prisma.user.count(),
     prisma.instance.count(),
     prisma.subscription.count({ where: { status: 'active' } }),
+    getSystemSettings(),
   ])
 
   const dbStats = [
@@ -65,6 +68,10 @@ export default async function AdminHealthPage() {
           <p className="text-red-400 text-sm">Health API error: {error}</p>
         </div>
       )}
+
+      <div className="mb-8">
+        <KillSwitchCard initialActive={systemSettings.delegationKillSwitch} />
+      </div>
 
       <div className="space-y-4">
         {systemInfo.map((item) => (

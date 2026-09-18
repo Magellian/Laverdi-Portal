@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { prisma } from '@/lib/prisma'
 import { getProvisionCallbackSecret } from '@/lib/provisioning/engine'
+import { isDelegationKillSwitchActive } from '@/lib/kill-switch'
 
 const VALID_KINDS = new Set(['install_package', 'run_command', 'render_job'])
 
@@ -55,6 +56,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
   if (!kind || !VALID_KINDS.has(kind)) {
     return NextResponse.json({ error: `kind must be one of ${[...VALID_KINDS].join(', ')}` }, { status: 400 })
+  }
+
+  if (await isDelegationKillSwitchActive()) {
+    return NextResponse.json(
+      { error: 'Delegation is globally disabled right now (operator kill switch is on)' },
+      { status: 503 }
+    )
   }
 
   if (instance.delegationPolicy === 'server_only') {

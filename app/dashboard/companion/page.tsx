@@ -23,6 +23,7 @@ interface CompanionStatus {
   companionLastSeen: string | null
   delegationPolicy: string
   delegatedJobs: DelegatedJob[]
+  delegationKillSwitchActive?: boolean
 }
 
 interface PairingInfo {
@@ -251,6 +252,17 @@ export default function CompanionPage() {
 
       {selectedAgent && status && (
         <>
+          {status.delegationKillSwitchActive && (
+            <div className="rounded-xl bg-amber-900/30 border border-amber-700 p-4 mb-6">
+              <p className="text-amber-400 text-sm font-medium">Delegation is temporarily paused</p>
+              <p className="text-amber-400/80 text-xs mt-1">
+                We've paused delegated jobs platform-wide while we look into something. Your
+                pairing and policy settings are unaffected and everything will resume
+                automatically — no action needed on your end.
+              </p>
+            </div>
+          )}
+
           {/* Pairing card */}
           <div className="rounded-xl bg-zinc-800 border border-zinc-700 p-6 mb-6">
             <div className="flex items-start justify-between mb-4">

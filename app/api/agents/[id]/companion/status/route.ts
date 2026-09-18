@@ -1,6 +1,7 @@
 import { auth } from '@/lib/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { isDelegationKillSwitchActive } from '@/lib/kill-switch'
 
 const VALID_POLICIES = new Set(['ask', 'auto_trusted', 'auto_all', 'server_only'])
 
@@ -36,7 +37,10 @@ export async function GET(
     return NextResponse.json({ error: 'Agent not found' }, { status: 404 })
   }
 
-  return NextResponse.json(instance)
+  return NextResponse.json({
+    ...instance,
+    delegationKillSwitchActive: await isDelegationKillSwitchActive(),
+  })
 }
 
 /**

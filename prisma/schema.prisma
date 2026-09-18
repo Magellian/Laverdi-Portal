@@ -209,6 +209,21 @@ model DelegatedJob {
   @@map("delegated_job")
 }
 
+// Operator-controlled global switches (Step 7 narrow-beta safety net).
+// Currently just the delegation kill switch: flipping it to true instantly
+// blocks all new delegated-job creation and hides already-approved jobs
+// from every companion heartbeat, across every instance, with no redeploy.
+// Single row, fixed id "global". See hermes-hybrid-companion-design.md
+// section 6 and the admin System Health page.
+model SystemSetting {
+  id                   String   @id @default("global")
+  delegationKillSwitch Boolean  @default(false)
+  updatedAt            DateTime @updatedAt
+  updatedBy            String?
+
+  @@map("system_setting")
+}
+
 // Discount / promo codes (managed by admins)
 model DiscountCode {
   id            String   @id @default(cuid())
