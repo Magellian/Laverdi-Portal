@@ -333,6 +333,51 @@ export default function CompanionPage() {
             )}
           </div>
 
+          {/* Agent prompt — shows when token exists */}
+          {pairing?.pairingToken && (() => {
+            const agentPrompt = `I've paired the LaVerdi Companion app with your instance. You can now run commands on my local machine by calling:
+
+  delegate --command "the command here"
+
+For example:
+  delegate --command "nvidia-smi"
+  delegate --command "pip install pandas"
+  delegate --command "cat /etc/os-release"
+
+This creates a job that my companion picks up, runs on my machine, and returns the output. It blocks until the job completes (up to 90 seconds).
+
+When to use this:
+- Installing packages (pip install, npm install -g, apt-get install)
+- Running commands that need my GPU, local files, or Windows tools
+- Anything your Docker sandbox can't do
+
+When NOT to use:
+- Web searches, API calls, sandbox file ops — you can do those yourself
+- Commands that could damage my system — flag those and I'll review`
+
+            return (
+              <div className="rounded-xl bg-zinc-800 border border-zinc-700 p-6 mb-6">
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <h2 className="text-lg font-semibold text-white">Share with your agent</h2>
+                    <p className="text-sm text-zinc-400 mt-0.5">
+                      Paste this into a chat with your agent so it knows how to use the companion.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => { navigator.clipboard.writeText(agentPrompt).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000) }).catch(() => {}) }}
+                    className="rounded-lg border border-zinc-600 px-3 py-1.5 text-xs text-zinc-300 hover:border-zinc-400 hover:text-white transition-colors shrink-0"
+                  >
+                    {copied ? 'Copied!' : 'Copy prompt'}
+                  </button>
+                </div>
+                <pre className="rounded-lg bg-zinc-900 border border-zinc-700 p-4 text-xs text-zinc-300 font-mono leading-relaxed whitespace-pre-wrap break-words overflow-x-auto max-h-80 overflow-y-auto">
+{agentPrompt}
+                </pre>
+              </div>
+            )
+          })()}
+
           {/* Delegation policy card */}
           <div className="rounded-xl bg-zinc-800 border border-zinc-700 p-6 mb-6">
             <h2 className="text-lg font-semibold text-white mb-1">Delegation Policy</h2>
