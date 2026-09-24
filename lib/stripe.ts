@@ -21,9 +21,9 @@ export const stripe = new Proxy({} as Stripe, {
 
 // Map Stripe price IDs to tier names
 const PRICE_TO_TIER: Record<string, string> = {
-  'price_1TeTlyPgT412N4dj2Uv4ue41': 'starter',
-  'price_1TeTtKPgT412N4dj0CHQfbrs': 'pro',
-  'price_1TeTtfPgT412N4djm9Quvt69': 'enterprise',
+  'price_1Te3vfPgT412N4djnUuiI9Ea': 'starter',
+  'price_1Te3wfPgT412N4djrFK1LT8V': 'pro',
+  'price_1Te3xSPgT412N4djdvZotTBw': 'enterprise',
 }
 
 export function getTierFromPriceId(priceId: string): string {

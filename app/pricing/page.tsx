@@ -13,7 +13,7 @@ const PRICING_TIERS = [
       'Community Support',
       'Basic Analytics',
     ],
-    priceId: 'price_1TeTlyPgT412N4dj2Uv4ue41',
+    priceId: 'price_1Te3vfPgT412N4djnUuiI9Ea',
     cta: 'Get Started',
   },
   {
@@ -27,7 +27,7 @@ const PRICING_TIERS = [
       'Advanced Analytics',
       'API Access',
     ],
-    priceId: 'price_1TeTtKPgT412N4dj0CHQfbrs',
+    priceId: 'price_1Te3wfPgT412N4djrFK1LT8V',
     cta: 'Subscribe Now',
     highlighted: true,
   },
@@ -44,7 +44,7 @@ const PRICING_TIERS = [
       'Custom Integrations',
       'SLA Guarantee',
     ],
-    priceId: 'price_1TeTtfPgT412N4djm9Quvt69',
+    priceId: 'price_1Te3xSPgT412N4djdvZotTBw',
     cta: 'Contact Sales',
   },
 ];
