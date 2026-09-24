@@ -187,6 +187,8 @@ export default function CompanionPage() {
     ? `LaVerdiCompanion.exe pair --instance ${selectedAgent} --token ${pairing.pairingToken} --base-url https://laverdi.tech`
     : null
 
+  const startCommand = pairCommand ? 'LaVerdiCompanion.exe start' : null
+
   if (loading) {
     return (
       <div className="p-8">
@@ -236,7 +238,12 @@ export default function CompanionPage() {
           {
             target: 'tour-companion-paircommand',
             title: 'Step 4: Run the pair command',
-            body: 'After installing, open "Pair LaVerdi Companion" from your Start Menu and run this exact command. That\u2019s it \u2014 your agent can now reach your machine.',
+            body: 'After installing, open "Pair LaVerdi Companion" from your Start Menu and run this exact command.',
+          },
+          {
+            target: 'tour-companion-startcommand',
+            title: 'Step 5: Start it (don\u2019t skip this)',
+            body: 'Pairing alone doesn\u2019t connect anything \u2014 run this command too, and leave the window open. This is what actually listens for delegated jobs. There\u2019s no tray icon or background service yet, so closing the window stops it.',
           },
         ]}
       />
@@ -361,13 +368,25 @@ export default function CompanionPage() {
             </button>
 
             {pairCommand && (
-              <div>
+              <div className="mb-4">
                 <label className="block text-xs text-zinc-500 mb-1.5">
-                  After installing, choose &quot;Pair LaVerdi Companion&quot; from the Start Menu
+                  1. After installing, choose &quot;Pair LaVerdi Companion&quot; from the Start Menu
                   and run:
                 </label>
                 <code id="tour-companion-paircommand" className="block rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2.5 text-xs text-zinc-300 font-mono break-all">
                   {pairCommand}
+                </code>
+              </div>
+            )}
+
+            {startCommand && (
+              <div>
+                <label className="block text-xs text-zinc-500 mb-1.5">
+                  2. Then run this too, and leave the window open &mdash; this is what actually
+                  listens for delegated jobs (pairing alone doesn&apos;t start it):
+                </label>
+                <code id="tour-companion-startcommand" className="block rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2.5 text-xs text-zinc-300 font-mono break-all">
+                  {startCommand}
                 </code>
               </div>
             )}
