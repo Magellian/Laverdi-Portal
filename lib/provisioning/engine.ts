@@ -339,6 +339,39 @@ export async function callProvisioner(instance: {
 }
 
 /**
+ * Ask the provisioner to build a personalized Companion installer for one
+ * instance -- the pairing token is baked into the .exe at build time (via
+ * NSIS command-line defines) so it can pair and register its own hidden
+ * background task with no manual commands. Runs on the host, not in the
+ * app's Alpine container, because that's where `makensis` lives.
+ */
+export async function buildCompanionInstaller(
+  instanceId: string,
+  pairingToken: string,
+  baseUrl = 'https://laverdi.tech'
+): Promise<Buffer> {
+  const provisionerUrl = getProvisionerUrl()
+  const secret = getProvisionCallbackSecret()
+
+  const res = await fetch(`${provisionerUrl}/companion-installer`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${secret}`,
+    },
+    body: JSON.stringify({ instanceId, pairingToken, baseUrl }),
+  })
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}))
+    throw new Error(err.error || `Provisioner returned ${res.status} building the installer`)
+  }
+
+  const result = await res.json()
+  return Buffer.from(result.dataBase64, 'base64')
+}
+
+/**
  * Mark an instance as running (called after Docker container is confirmed up).
  */
 export async function markInstanceRunning(instanceId: string, containerId?: string) {

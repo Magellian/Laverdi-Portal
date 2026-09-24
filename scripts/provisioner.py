@@ -16,6 +16,8 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 
 HERMES_BIN = "/usr/local/bin/hermes"
 HERMES_HOME = "/root/.hermes"
+COMPANION_NSIS_DIR = "/root/laverdi-portal/companion-app/installer"
+COMPANION_NSIS_SCRIPT = f"{COMPANION_NSIS_DIR}/laverdi-companion.nsi"
 
 # No hardcoded fallbacks: a previous version of this file defaulted these to
 # fixed strings when the env var was unset, which meant those strings —
@@ -372,6 +374,50 @@ def add_telegram(instance_id, bot_token):
     return {"status": "ok", "platform": "telegram"}
 
 
+def build_companion_installer(instance_id, pairing_token, base_url="https://laverdi.tech"):
+    """Build a personalized LaVerdi Companion installer (.exe) for one
+    instance -- pairing token baked in via NSIS command-line defines so the
+    installer pairs and registers its own background task silently. Runs
+    makensis on this host (not available inside the app's Alpine container).
+    Returns the built file's bytes, base64-encoded for the JSON response.
+    """
+    import re as _re
+    import base64
+    import tempfile
+
+    if not _re.fullmatch(r"[a-zA-Z0-9_-]{1,64}", instance_id):
+        raise ValueError("invalid instanceId")
+    if not _re.fullmatch(r"[0-9a-f]{48}", pairing_token):
+        raise ValueError("invalid pairingToken")
+    if not _re.fullmatch(r"https://[a-zA-Z0-9_.-]{1,255}", base_url):
+        raise ValueError("invalid baseUrl")
+
+    with tempfile.TemporaryDirectory() as tmp:
+        out_path = f"{tmp}/LaVerdiCompanion-Setup.exe"
+        cmd = [
+            "makensis",
+            f"-DINSTANCEID={instance_id}",
+            f"-DPAIRTOKEN={pairing_token}",
+            f"-DBASEURL={base_url}",
+            f"-DOUTFILE={out_path}",
+            COMPANION_NSIS_SCRIPT,
+        ]
+        proc = subprocess.run(
+            cmd, cwd=COMPANION_NSIS_DIR, capture_output=True, text=True, timeout=60
+        )
+        if proc.returncode != 0:
+            raise RuntimeError(f"makensis failed: {proc.stdout}\n{proc.stderr}")
+
+        with open(out_path, "rb") as f:
+            data = f.read()
+
+    return {
+        "status": "ok",
+        "filename": "LaVerdiCompanion-Setup.exe",
+        "dataBase64": base64.b64encode(data).decode(),
+    }
+
+
 class ProvisionerHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         # Auth check (constant-time compare to avoid a timing side-channel)
@@ -397,6 +443,12 @@ class ProvisionerHandler(BaseHTTPRequestHandler):
                 result = teardown_instance(body["instanceId"])
             elif self.path == "/telegram":
                 result = add_telegram(body["instanceId"], body["botToken"])
+            elif self.path == "/companion-installer":
+                result = build_companion_installer(
+                    body["instanceId"],
+                    body["pairingToken"],
+                    body.get("baseUrl", "https://laverdi.tech"),
+                )
             else:
                 self.send_response(404)
                 self.end_headers()

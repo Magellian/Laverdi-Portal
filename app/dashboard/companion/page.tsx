@@ -221,43 +221,32 @@ export default function CompanionPage() {
         replaySignal={tourReplay}
         steps={[
           {
-            target: 'tour-companion-download',
-            title: 'Step 1: Download the installer',
-            body: "Grab the real Windows installer here and run it. It installs to your own user folder \u2014 no admin rights needed.",
-          },
-          {
             target: 'tour-companion-agent-select',
-            title: 'Step 2: Pick your agent',
+            title: 'Step 1: Pick your agent',
             body: 'Choose which hosted agent you want your local machine paired to.',
           },
           {
             target: 'tour-companion-token',
-            title: 'Step 3: Generate a pairing token',
+            title: 'Step 2: Generate a pairing token',
             body: "Click Generate Token \u2014 this is the secret your companion app uses to prove it's really you.",
           },
           {
-            target: 'tour-companion-paircommand',
-            title: 'Step 4: Run the pair command',
-            body: 'After installing, open "Pair LaVerdi Companion" from your Start Menu and run this exact command.',
-          },
-          {
-            target: 'tour-companion-startcommand',
-            title: 'Step 5: Start it (don\u2019t skip this)',
-            body: 'Pairing alone doesn\u2019t connect anything \u2014 run this command too, and leave the window open. This is what actually listens for delegated jobs. There\u2019s no tray icon or background service yet, so closing the window stops it.',
+            target: 'tour-companion-download-personalized',
+            title: 'Step 3: Download and run it',
+            body: "This installer is already paired to this agent \u2014 just run it. Windows will ask for a one-time permission during install; that's expected, it's what lets it run in the background automatically every time you log in. Nothing else to type.",
           },
         ]}
       />
 
       <div className="mb-6 rounded-lg bg-amber-500/10 border border-amber-500/20 p-4 text-sm text-amber-300">
-        The companion app is an early build — a real Windows installer, but it still runs in a
-        console window rather than as a background service (no system tray yet), and macOS/Linux
-        aren&apos;t built. Pairing and delegated installs work end-to-end today.{' '}
+        The companion app is an early build — Windows only for now, macOS/Linux aren&apos;t built
+        yet. Pick an agent below to get an installer that&apos;s already paired to it, or grab the
+        generic one here and pair it manually.{' '}
         <a
-          id="tour-companion-download"
           href="/downloads/LaVerdiCompanion-Setup-0.3.0.exe"
           className="font-semibold underline hover:text-amber-200"
         >
-          Download for Windows
+          Download generic installer
         </a>
       </div>
 
@@ -367,28 +356,53 @@ export default function CompanionPage() {
               {rotating ? 'Rotating…' : pairing?.pairingToken ? 'Rotate Token' : 'Generate Token'}
             </button>
 
-            {pairCommand && (
+            {pairing?.pairingToken && selectedAgent && (
               <div className="mb-4">
-                <label className="block text-xs text-zinc-500 mb-1.5">
-                  1. After installing, choose &quot;Pair LaVerdi Companion&quot; from the Start Menu
-                  and run:
-                </label>
-                <code id="tour-companion-paircommand" className="block rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2.5 text-xs text-zinc-300 font-mono break-all">
-                  {pairCommand}
-                </code>
+                <a
+                  id="tour-companion-download-personalized"
+                  href={`/api/agents/${selectedAgent}/companion/download`}
+                  className="inline-flex items-center gap-2 rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-black hover:bg-zinc-100 transition-colors"
+                >
+                  Download &amp; pair installer
+                </a>
+                <p className="text-xs text-zinc-500 mt-2">
+                  One click: this installer is already paired to this agent. Run it and it pairs
+                  itself, then runs in the background automatically every login. A single Windows
+                  permission prompt during install is expected and normal.
+                </p>
               </div>
             )}
 
-            {startCommand && (
-              <div>
-                <label className="block text-xs text-zinc-500 mb-1.5">
-                  2. Then run this too, and leave the window open &mdash; this is what actually
-                  listens for delegated jobs (pairing alone doesn&apos;t start it):
-                </label>
-                <code id="tour-companion-startcommand" className="block rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2.5 text-xs text-zinc-300 font-mono break-all">
-                  {startCommand}
-                </code>
-              </div>
+            {(pairCommand || startCommand) && (
+              <details className="group">
+                <summary className="cursor-pointer text-xs text-zinc-500 hover:text-zinc-300 mb-3 select-none">
+                  Advanced: pair manually instead
+                </summary>
+
+                {pairCommand && (
+                  <div className="mb-4">
+                    <label className="block text-xs text-zinc-500 mb-1.5">
+                      1. After installing the generic installer, choose &quot;Pair LaVerdi
+                      Companion&quot; from the Start Menu and run:
+                    </label>
+                    <code id="tour-companion-paircommand" className="block rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2.5 text-xs text-zinc-300 font-mono break-all">
+                      {pairCommand}
+                    </code>
+                  </div>
+                )}
+
+                {startCommand && (
+                  <div>
+                    <label className="block text-xs text-zinc-500 mb-1.5">
+                      2. Then run this too, and leave the window open &mdash; this is what
+                      actually listens for delegated jobs (pairing alone doesn&apos;t start it):
+                    </label>
+                    <code id="tour-companion-startcommand" className="block rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2.5 text-xs text-zinc-300 font-mono break-all">
+                      {startCommand}
+                    </code>
+                  </div>
+                )}
+              </details>
             )}
           </div>
 
