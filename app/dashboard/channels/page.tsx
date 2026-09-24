@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import GuidedTour from '@/components/tour/GuidedTour'
 
 interface Agent {
   id: string
@@ -33,6 +34,7 @@ export default function ChannelsPage() {
   const [connectingSlack, setConnectingSlack] = useState(false)
   const [slackResult, setSlackResult] = useState<ConnectResult>(null)
   const [showSlackSteps, setShowSlackSteps] = useState(false)
+  const [tourReplay, setTourReplay] = useState(0)
 
   const fetchAgents = () => {
     fetch('/api/agents')
@@ -102,12 +104,48 @@ export default function ChannelsPage() {
 
   return (
     <div className="p-8 max-w-3xl">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Connect Channels</h1>
-        <p className="mt-1 text-zinc-400">
-          Connect your agent to messaging platforms so you can chat with it anywhere.
-        </p>
+      <div className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Connect Channels</h1>
+          <p className="mt-1 text-zinc-400">
+            Connect your agent to messaging platforms so you can chat with it anywhere.
+          </p>
+        </div>
+        <button
+          onClick={() => setTourReplay((n) => n + 1)}
+          className="shrink-0 rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300 hover:border-zinc-500 hover:text-white transition-colors"
+        >
+          Show tutorial
+        </button>
       </div>
+
+      <GuidedTour
+        tourId="telegram-connect"
+        replaySignal={tourReplay}
+        steps={[
+          {
+            target: 'tour-select-agent',
+            title: 'First, pick your agent',
+            body: "Choose which of your hosted agents you want to connect to Telegram. If you only have one, it's already selected.",
+          },
+          {
+            target: 'tour-telegram-steps-toggle',
+            title: "Don't have a bot token yet?",
+            body: 'Click here to expand a step-by-step guide to creating a Telegram bot with BotFather — it takes about a minute.',
+            onEnter: () => setShowSteps(true),
+          },
+          {
+            target: 'tour-telegram-token-input',
+            title: 'Paste your bot token here',
+            body: "BotFather sends you a token that looks like 123456789:ABCdefGHI… Paste the whole thing into this field.",
+          },
+          {
+            target: 'tour-telegram-connect-button',
+            title: 'Connect it',
+            body: "Hit this button and your bot goes live right away — no restart, no waiting. Open Telegram and send it a message to try it out.",
+          },
+        ]}
+      />
 
       {/* Agent selector (shared across all channels) */}
       {agents.length === 0 ? (
@@ -123,6 +161,7 @@ export default function ChannelsPage() {
         <div className="rounded-xl bg-zinc-800 border border-zinc-700 p-4 mb-6">
           <label className="block text-sm text-zinc-400 mb-1">Select Agent</label>
           <select
+            id="tour-select-agent"
             value={selectedAgent}
             onChange={(e) => {
               setSelectedAgent(e.target.value)
@@ -154,6 +193,7 @@ export default function ChannelsPage() {
 
         {/* Step-by-step guide toggle */}
         <button
+          id="tour-telegram-steps-toggle"
           onClick={() => setShowSteps(!showSteps)}
           className="text-sm text-zinc-400 hover:text-white transition-colors mb-4 flex items-center gap-1"
         >
@@ -295,6 +335,7 @@ export default function ChannelsPage() {
                 {selectedAgentData?.hasTelegram ? 'New Bot Token (replaces existing)' : 'Bot Token'}
               </label>
               <input
+                id="tour-telegram-token-input"
                 type="text"
                 value={botToken}
                 onChange={(e) => setBotToken(e.target.value)}
@@ -304,6 +345,7 @@ export default function ChannelsPage() {
             </div>
 
             <button
+              id="tour-telegram-connect-button"
               onClick={connectTelegram}
               disabled={connecting || !botToken || !selectedAgent}
               className="rounded-lg bg-white text-black px-4 py-2.5 text-sm font-semibold hover:bg-zinc-100 transition-colors disabled:opacity-50 w-full"

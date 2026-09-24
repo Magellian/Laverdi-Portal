@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState, useCallback } from 'react'
+import GuidedTour from '@/components/tour/GuidedTour'
 
 interface Agent {
   id: string
@@ -67,6 +68,7 @@ export default function CompanionPage() {
   const [savingPolicy, setSavingPolicy] = useState(false)
   const [jobActionId, setJobActionId] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [tourReplay, setTourReplay] = useState(0)
 
   useEffect(() => {
     fetch('/api/agents')
@@ -196,19 +198,55 @@ export default function CompanionPage() {
 
   return (
     <div className="p-8 max-w-3xl">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white">Companion App</h1>
-        <p className="mt-1 text-zinc-400">
-          Pair a local companion app to your agent so it can delegate work your sandboxed
-          agent can&apos;t do on its own — installing packages, running heavier local commands.
-        </p>
+      <div className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Companion App</h1>
+          <p className="mt-1 text-zinc-400">
+            Pair a local companion app to your agent so it can delegate work your sandboxed
+            agent can&apos;t do on its own — installing packages, running heavier local commands.
+          </p>
+        </div>
+        <button
+          onClick={() => setTourReplay((n) => n + 1)}
+          className="shrink-0 rounded-lg border border-zinc-700 px-3 py-1.5 text-xs text-zinc-300 hover:border-zinc-500 hover:text-white transition-colors"
+        >
+          Show tutorial
+        </button>
       </div>
+
+      <GuidedTour
+        tourId="companion-pairing"
+        replaySignal={tourReplay}
+        steps={[
+          {
+            target: 'tour-companion-download',
+            title: 'Step 1: Download the installer',
+            body: "Grab the real Windows installer here and run it. It installs to your own user folder \u2014 no admin rights needed.",
+          },
+          {
+            target: 'tour-companion-agent-select',
+            title: 'Step 2: Pick your agent',
+            body: 'Choose which hosted agent you want your local machine paired to.',
+          },
+          {
+            target: 'tour-companion-token',
+            title: 'Step 3: Generate a pairing token',
+            body: "Click Generate Token \u2014 this is the secret your companion app uses to prove it's really you.",
+          },
+          {
+            target: 'tour-companion-paircommand',
+            title: 'Step 4: Run the pair command',
+            body: 'After installing, open "Pair LaVerdi Companion" from your Start Menu and run this exact command. That\u2019s it \u2014 your agent can now reach your machine.',
+          },
+        ]}
+      />
 
       <div className="mb-6 rounded-lg bg-amber-500/10 border border-amber-500/20 p-4 text-sm text-amber-300">
         The companion app is an early build — a real Windows installer, but it still runs in a
         console window rather than as a background service (no system tray yet), and macOS/Linux
         aren&apos;t built. Pairing and delegated installs work end-to-end today.{' '}
         <a
+          id="tour-companion-download"
           href="/downloads/LaVerdiCompanion-Setup-0.3.0.exe"
           className="font-semibold underline hover:text-amber-200"
         >
@@ -238,6 +276,7 @@ export default function CompanionPage() {
         <div className="mb-6">
           <label className="block text-xs text-zinc-500 mb-1.5">Agent</label>
           <select
+            id="tour-companion-agent-select"
             value={selectedAgent}
             onChange={(e) => setSelectedAgent(e.target.value)}
             className="w-full rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2.5 text-white focus:border-white focus:outline-none"
@@ -313,6 +352,7 @@ export default function CompanionPage() {
             </div>
 
             <button
+              id="tour-companion-token"
               onClick={rotateToken}
               disabled={rotating}
               className="rounded-lg border border-zinc-700 px-3 py-2 text-sm text-zinc-300 hover:border-zinc-500 transition-colors disabled:opacity-50 mb-4"
@@ -326,7 +366,7 @@ export default function CompanionPage() {
                   After installing, choose &quot;Pair LaVerdi Companion&quot; from the Start Menu
                   and run:
                 </label>
-                <code className="block rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2.5 text-xs text-zinc-300 font-mono break-all">
+                <code id="tour-companion-paircommand" className="block rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2.5 text-xs text-zinc-300 font-mono break-all">
                   {pairCommand}
                 </code>
               </div>

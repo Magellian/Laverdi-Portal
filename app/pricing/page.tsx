@@ -103,7 +103,7 @@ export default function Pricing() {
             Simple, <span className="text-[var(--accent)]">Transparent</span> Pricing
           </h1>
           <p className="text-xl text-[var(--muted)] max-w-2xl mx-auto">
-            Choose the perfect plan for your AI agent needs. All plans include a 7-day free trial.
+            Choose the perfect plan for your AI agent needs.
           </p>
         </div>
 
