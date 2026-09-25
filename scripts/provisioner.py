@@ -12,7 +12,7 @@ import os
 import hmac
 import hashlib
 import secrets
-from http.server import HTTPServer, BaseHTTPRequestHandler
+from http.server import ThreadingHTTPServer, BaseHTTPRequestHandler
 
 HERMES_BIN = "/usr/local/bin/hermes"
 HERMES_HOME = "/root/.hermes"
@@ -419,6 +419,14 @@ def build_companion_installer(instance_id, pairing_token, base_url="https://lave
 
 
 class ProvisionerHandler(BaseHTTPRequestHandler):
+    # A client that opens a connection and never finishes sending a
+    # request (or just sits there) used to wedge the whole server: the
+    # old HTTPServer handles one connection at a time, so anyone -- a
+    # scanner, a stalled client, this port used to be reachable from the
+    # whole internet -- could block every real caller behind it. Now
+    # threaded (below), plus bound how long we wait on one connection.
+    timeout = 30
+
     def do_POST(self):
         # Auth check (constant-time compare to avoid a timing side-channel)
         auth = self.headers.get("Authorization", "")
@@ -470,6 +478,7 @@ class ProvisionerHandler(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
-    server = HTTPServer(("0.0.0.0", 9090), ProvisionerHandler)
-    print("LaVerdi Provisioner listening on 127.0.0.1:9090")
+    server = ThreadingHTTPServer(("0.0.0.0", 9090), ProvisionerHandler)
+    server.daemon_threads = True
+    print("LaVerdi Provisioner listening on 0.0.0.0:9090 (threaded, firewalled to localhost + docker bridge)")
     server.serve_forever()
