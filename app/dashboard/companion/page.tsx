@@ -226,14 +226,9 @@ export default function CompanionPage() {
             body: 'Choose which hosted agent you want your local machine paired to.',
           },
           {
-            target: 'tour-companion-token',
-            title: 'Step 2: Generate a pairing token',
-            body: "Click Generate Token \u2014 this is the secret your companion app uses to prove it's really you.",
-          },
-          {
             target: 'tour-companion-download-personalized',
-            title: 'Step 3: Download and run it',
-            body: "This installer is already paired to this agent \u2014 just run it. Windows will ask for a one-time permission during install; that's expected, it's what lets it run in the background automatically every time you log in. Nothing else to type.",
+            title: 'Step 2: Download and run it',
+            body: "This installer is already paired to this agent \u2014 just run it. Windows will ask for a one-time permission during install; that's expected, it's what lets it run in the background automatically every time you log in. Nothing else to type, nothing else to copy.",
           },
         ]}
       />
@@ -324,39 +319,7 @@ export default function CompanionPage() {
               </span>
             </div>
 
-            <label className="block text-xs text-zinc-500 mb-1.5">Pairing Token</label>
-            <div className="flex items-center gap-2 mb-3">
-              <code className="flex-1 rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2.5 text-sm text-zinc-300 font-mono break-all">
-                {pairing?.pairingToken ? (revealToken ? pairing.pairingToken : maskedToken) : '—'}
-              </code>
-              {pairing?.pairingToken && (
-                <>
-                  <button
-                    onClick={() => setRevealToken((v) => !v)}
-                    className="rounded-lg border border-zinc-700 px-3 py-2.5 text-sm text-zinc-400 hover:text-white transition-colors"
-                  >
-                    {revealToken ? 'Hide' : 'Reveal'}
-                  </button>
-                  <button
-                    onClick={copyToken}
-                    className="rounded-lg border border-zinc-700 px-3 py-2.5 text-sm text-zinc-400 hover:text-white transition-colors"
-                  >
-                    {copied ? 'Copied!' : 'Copy'}
-                  </button>
-                </>
-              )}
-            </div>
-
-            <button
-              id="tour-companion-token"
-              onClick={rotateToken}
-              disabled={rotating}
-              className="rounded-lg border border-zinc-700 px-3 py-2 text-sm text-zinc-300 hover:border-zinc-500 transition-colors disabled:opacity-50 mb-4"
-            >
-              {rotating ? 'Rotating…' : pairing?.pairingToken ? 'Rotate Token' : 'Generate Token'}
-            </button>
-
-            {pairing?.pairingToken && selectedAgent && (
+            {selectedAgent && (
               <div className="mb-4">
                 <a
                   id="tour-companion-download-personalized"
@@ -373,11 +336,48 @@ export default function CompanionPage() {
               </div>
             )}
 
-            {(pairCommand || startCommand) && (
+            {(pairCommand || startCommand || pairing?.pairingToken) && (
               <details className="group">
                 <summary className="cursor-pointer text-xs text-zinc-500 hover:text-zinc-300 mb-3 select-none">
-                  Advanced: pair manually instead
+                  Advanced: pairing token &amp; manual pairing
                 </summary>
+
+                <div className="mb-4">
+                  <label className="block text-xs text-zinc-500 mb-1.5">Pairing Token</label>
+                  <div className="flex items-center gap-2 mb-3">
+                    <code className="flex-1 rounded-lg bg-zinc-900 border border-zinc-700 px-3 py-2.5 text-sm text-zinc-300 font-mono break-all">
+                      {pairing?.pairingToken ? (revealToken ? pairing.pairingToken : maskedToken) : '—'}
+                    </code>
+                    {pairing?.pairingToken && (
+                      <>
+                        <button
+                          onClick={() => setRevealToken((v) => !v)}
+                          className="rounded-lg border border-zinc-700 px-3 py-2.5 text-sm text-zinc-400 hover:text-white transition-colors"
+                        >
+                          {revealToken ? 'Hide' : 'Reveal'}
+                        </button>
+                        <button
+                          onClick={copyToken}
+                          className="rounded-lg border border-zinc-700 px-3 py-2.5 text-sm text-zinc-400 hover:text-white transition-colors"
+                        >
+                          {copied ? 'Copied!' : 'Copy'}
+                        </button>
+                      </>
+                    )}
+                  </div>
+
+                  <button
+                    onClick={rotateToken}
+                    disabled={rotating}
+                    className="rounded-lg border border-zinc-700 px-3 py-2 text-sm text-zinc-300 hover:border-zinc-500 transition-colors disabled:opacity-50"
+                  >
+                    {rotating ? 'Rotating…' : pairing?.pairingToken ? 'Rotate Token' : 'Generate Token'}
+                  </button>
+                  <p className="text-xs text-zinc-500 mt-1.5">
+                    Rotating invalidates any currently paired app using the old token &mdash;
+                    only needed if you suspect it leaked or want to re-pair a different machine.
+                  </p>
+                </div>
 
                 {pairCommand && (
                   <div className="mb-4">
