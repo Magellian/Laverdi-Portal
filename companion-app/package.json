@@ -11,7 +11,7 @@
     "start": "node src/index.js start",
     "pair": "node src/index.js pair",
     "status": "node src/index.js status",
-    "build:win": "pkg . --targets node22-win-x64 --output dist/LaVerdiCompanion.exe"
+    "build:win": "pkg . --targets node22-win-x64 --public --output dist/LaVerdiCompanion.exe"
   },
   "engines": {
     "node": ">=18"

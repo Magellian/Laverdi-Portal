@@ -106,6 +106,23 @@ proxy:
   enabled: true
   tunnel_port: {tunnel_port}
   enforce_on_docker: true
+  extra_allowed_hosts:
+    - host.docker.internal
+  upstream_deny_cidrs:
+    - 127.0.0.0/8
+    - ::1/128
+    - 169.254.0.0/16
+    - fe80::/10
+    - 10.0.0.0/8
+    - 172.16.0.0/16
+    - 172.18.0.0/15
+    - 172.20.0.0/14
+    - 172.24.0.0/13
+    - 192.168.0.0/16
+    - fc00::/7
+    - ::ffff:0:0/96
+    - 100.64.0.0/10
+    - 198.18.0.0/15
 # Wire this instance's sandboxed terminal to the companion delegation bridge:
 # a blocked install (allow_lazy_installs: false, above) gets handed to
 # the paired local companion app instead of just failing. See

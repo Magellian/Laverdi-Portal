@@ -188,9 +188,12 @@ async function cmdStart(args) {
   }
 
   await tick();
-  const handle = setInterval(tick, intervalSeconds * 1000);
-  // Keep the process alive; SIGINT handler above exits explicitly.
-  handle.unref?.(); // don't let the timer alone keep a *packaged* service process pinned oddly
+  setInterval(tick, intervalSeconds * 1000);
+  // Deliberately NOT unref()'d: when launched hidden/detached (no console,
+  // no stdin) via the Scheduled Task, nothing else pins the event loop, so
+  // an unref()'d timer let the process exit right after the first tick --
+  // one heartbeat, then silence forever. SIGINT handler above still exits
+  // explicitly for the interactive foreground case.
 }
 
 async function main() {
