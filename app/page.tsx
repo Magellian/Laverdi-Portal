@@ -319,7 +319,7 @@ export default async function Home() {
                 <li><a href="/download" className="hover:text-[var(--accent)] transition-colors">Companion</a></li>
                 <li><a href="#features" className="hover:text-[var(--accent)] transition-colors">Features</a></li>
                 <li><a href="/pricing" className="hover:text-[var(--accent)] transition-colors">Pricing</a></li>
-                <li><a href="/dashboard/docs" className="hover:text-[var(--accent)] transition-colors">Docs</a></li>
+                <li><a href="/dashboard/workspace?tab=docs" className="hover:text-[var(--accent)] transition-colors">Docs</a></li>
               </ul>
             </div>
             <div>

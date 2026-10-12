@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import ConnectChannelStep from './wizard/ConnectChannelStep'
+import CompanionStep from './wizard/CompanionStep'
 
 interface Agent {
   id: string
@@ -190,6 +192,25 @@ export default function AgentDetailClient({ agent: initialAgent }: { agent: Agen
         >
           Regenerate Key — Coming Soon
         </button>
+      </div>
+
+      {/* Channels */}
+      <div className="rounded-xl bg-zinc-800 border border-zinc-700 p-6">
+        <h2 className="text-lg font-semibold text-white mb-1">Channels</h2>
+        <p className="text-sm text-zinc-400 mb-6">
+          Connect this agent to messaging platforms so you can chat with it anywhere.
+        </p>
+        <ConnectChannelStep agentId={agent.id} />
+      </div>
+
+      {/* Companion App */}
+      <div className="rounded-xl bg-zinc-800 border border-zinc-700 p-6">
+        <h2 className="text-lg font-semibold text-white mb-1">Companion App</h2>
+        <p className="text-sm text-zinc-400 mb-6">
+          Pair a local companion app to this agent so it can delegate work your sandboxed agent
+          can&apos;t do on its own.
+        </p>
+        <CompanionStep agentId={agent.id} />
       </div>
     </div>
   )

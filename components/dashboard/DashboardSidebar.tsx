@@ -4,19 +4,20 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { useState } from 'react'
+import StartHereBadge from './StartHereBadge'
 
 const navItems = [
-  { label: 'Overview', href: '/dashboard', icon: '🏠' },
-  { label: 'Your Plan', href: '/dashboard/plan', icon: '💳' },
   { label: 'Agents', href: '/dashboard/agents', icon: '🤖' },
-  { label: 'Channels', href: '/dashboard/channels', icon: '🔌' },
-  { label: 'Org', href: '/dashboard/org', icon: '🏢' },
-  { label: 'Board', href: '/dashboard/board', icon: '📋' },
-  { label: 'Companion App', href: '/dashboard/companion', icon: '⬇️' },
-  { label: 'Docs', href: '/dashboard/docs', icon: '📚' },
+  { label: 'Workspace', href: '/dashboard/workspace', icon: '🗂️' },
 ]
 
-export default function DashboardSidebar({ email }: { email: string | null | undefined }) {
+export default function DashboardSidebar({
+  email,
+  agentCount,
+}: {
+  email: string | null | undefined
+  agentCount: number
+}) {
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -28,21 +29,24 @@ export default function DashboardSidebar({ email }: { email: string | null | und
 
       <nav className="flex-1 overflow-y-auto py-4 px-3">
         {navItems.map((item) => {
-          const isActive = pathname === item.href
+          const isActive = pathname === item.href || pathname?.startsWith(item.href + '/')
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className={`flex items-center gap-3 rounded-lg px-3 py-2.5 mb-1 text-sm font-medium transition-colors ${
-                isActive
-                  ? 'bg-zinc-800 text-white'
-                  : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
-              }`}
-            >
-              <span className="text-base leading-none">{item.icon}</span>
-              {item.label}
-            </Link>
+            <div key={item.href} className="relative">
+              <Link
+                id={item.href === '/dashboard/agents' ? 'tour-nav-agents' : undefined}
+                href={item.href}
+                onClick={() => setMobileOpen(false)}
+                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 mb-1 text-sm font-medium transition-colors ${
+                  isActive
+                    ? 'bg-zinc-800 text-white'
+                    : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
+                }`}
+              >
+                <span className="text-base leading-none">{item.icon}</span>
+                {item.label}
+              </Link>
+              {item.href === '/dashboard/agents' && <StartHereBadge agentCount={agentCount} />}
+            </div>
           )
         })}
       </nav>

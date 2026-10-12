@@ -30,7 +30,7 @@ export async function POST() {
   try {
     const portalSession = await stripe.billingPortal.sessions.create({
       customer: user.stripeCustomerId,
-      return_url: `${process.env.NEXTAUTH_URL || 'https://laverdi.tech'}/dashboard/plan`,
+      return_url: `${process.env.NEXTAUTH_URL || 'https://laverdi.tech'}/dashboard/workspace?tab=plan`,
     })
 
     return NextResponse.json({ url: portalSession.url })
