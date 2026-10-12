@@ -24,6 +24,10 @@ export async function POST(request: NextRequest) {
       ...(customerEmail ? { customer_email: customerEmail } : {}),
       allow_promotion_codes: true,
       billing_address_collection: 'auto',
+      // Skip card collection entirely when a 100%-off promo code brings the
+      // total to $0 -- Stripe collects a card by default even then unless
+      // told otherwise.
+      payment_method_collection: 'if_required',
     })
 
     return NextResponse.json({ sessionId: checkoutSession.id, url: checkoutSession.url })
