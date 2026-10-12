@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { useState } from 'react'
 import StartHereBadge from './StartHereBadge'
+import CreditBalanceChip from './CreditBalanceChip'
 
 const navItems = [
   { label: 'Agents', href: '/dashboard/agents', icon: '🤖' },
@@ -50,6 +51,8 @@ export default function DashboardSidebar({
           )
         })}
       </nav>
+
+      <CreditBalanceChip />
 
       <div className="border-t border-zinc-800 px-4 py-4 flex-shrink-0">
         <p className="text-xs text-zinc-500 truncate mb-3">{email ?? '—'}</p>

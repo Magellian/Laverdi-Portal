@@ -7,6 +7,7 @@ const navItems = [
   { label: 'Users', href: '/admin/users' },
   { label: 'Agents', href: '/admin/agents' },
   { label: 'Subscriptions', href: '/admin/subscriptions' },
+  { label: 'Credits', href: '/admin/credits' },
   { label: 'System Health', href: '/admin/health' },
 ]
 

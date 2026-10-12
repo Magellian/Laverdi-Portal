@@ -41,3 +41,15 @@ export function getTierLimits(tier: string) {
       return { maxAgents: 1, maxChannels: 1, name: 'Starter', price: 19 }
   }
 }
+
+// One-time (mode: 'payment') credit-pack prices. See Pricing section of
+// the media add-on scoping doc.
+export const CREDIT_PACKS = [
+  { id: 'starter', label: 'Starter pack', credits: 100, priceId: 'price_1UPqFBPgT412N4djHfWYQZ52', priceLabel: '$4.99' },
+  { id: 'creator', label: 'Creator pack', credits: 500, priceId: 'price_1UPqFBPgT412N4djPw9O5stN', priceLabel: '$19.99' },
+  { id: 'pro', label: 'Pro pack', credits: 2000, priceId: 'price_1UPqFBPgT412N4dj2Zc14PyJ', priceLabel: '$69.99' },
+] as const
+
+export function getCreditPack(packId: string) {
+  return CREDIT_PACKS.find((p) => p.id === packId) || null
+}

@@ -10,6 +10,7 @@ import {
   sendCancellationEmail,
   sendInvoiceEmail,
 } from '@/lib/email'
+import { purchaseCredits } from '@/lib/credits'
 
 /** Safely extract period dates from a Stripe subscription object */
 function extractPeriodDates(sub: any): {
@@ -48,6 +49,26 @@ export async function POST(request: NextRequest) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
         console.log(`✓ Checkout completed: ${session.id}`)
+
+        // One-time credit-pack purchase -- a separate flow from the
+        // subscription checkout below (mode: 'payment', no subscription
+        // id, credited straight to the buyer's wallet by metadata.userId
+        // rather than looked up by email).
+        if (session.mode === 'payment' && session.metadata?.type === 'credit_pack') {
+          const userId = session.metadata.userId
+          const credits = parseInt(session.metadata.credits || '0', 10)
+          const paymentIntentId =
+            typeof session.payment_intent === 'string' ? session.payment_intent : session.payment_intent?.id
+
+          if (!userId || !credits || !paymentIntentId) {
+            console.error('Credit pack checkout missing userId/credits/paymentIntentId in metadata', session.id)
+            break
+          }
+
+          await purchaseCredits(userId, credits, paymentIntentId)
+          console.log(`  Credited ${credits} credits to user ${userId} (payment ${paymentIntentId})`)
+          break
+        }
 
         const customerEmail = session.customer_email || session.customer_details?.email
         const customerId = session.customer as string

@@ -34,6 +34,9 @@ model User {
   instances             Instance[]
   subscriptions         Subscription[]
   inferenceUsage        InferenceUsage[]
+  creditBalance         CreditBalance?
+  creditTransactions    CreditTransaction[]
+  mediaJobs             MediaJob[]
 
   @@map("user")
 }
@@ -183,6 +186,7 @@ model Instance {
   workspace Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
   owner     User      @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   delegatedJobs DelegatedJob[]
+  mediaJobs     MediaJob[]
 
   @@index([workspaceId])
   @@index([ownerId])
@@ -204,6 +208,7 @@ model DelegatedJob {
   payload       String?  // JSON-encoded request details (e.g. {"command": "pip install foo"})
 
   instance Instance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  mediaJob MediaJob?
 
   @@index([instanceId])
   @@map("delegated_job")
@@ -259,4 +264,82 @@ model InferenceUsage {
   @@index([timestamp])
   @@index([userId, timestamp])
   @@map("inference_usage")
+}
+
+// Credit wallet -- one row per user. Spends on image/video generation,
+// independent of subscription tier (see /topics/laverdi-saas media add-on
+// scoping doc). balance is always the currently-spendable amount: a hold
+// decrements it immediately, a refund increments it back, a charge is a
+// no-op on balance (the hold already covered it).
+model CreditBalance {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  balance   Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions CreditTransaction[]
+
+  @@map("credit_balance")
+}
+
+// Ledger of every credit movement -- purchase, monthly plan grant, a hold
+// placed when a media job starts, its charge (finalize) or refund
+// (release). amount is signed: positive credits the balance, negative
+// debits it. A 'charge' row carries amount 0 -- it marks the matching
+// 'hold' as consumed, it doesn't move the balance again.
+model CreditTransaction {
+  id                     String   @id @default(cuid())
+  userId                 String
+  creditBalanceId        String
+  amount                 Int
+  type                   String   // 'purchase' | 'grant' | 'hold' | 'charge' | 'refund'
+  mediaJobId             String?
+  stripePaymentIntentId  String?
+  note                   String?
+  createdAt              DateTime @default(now())
+
+  user          User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  creditBalance CreditBalance @relation(fields: [creditBalanceId], references: [id], onDelete: Cascade)
+  mediaJob      MediaJob?     @relation(fields: [mediaJobId], references: [id])
+
+  @@index([userId])
+  @@index([userId, createdAt])
+  @@index([mediaJobId])
+  @@map("credit_transaction")
+}
+
+// One row per image/video generation request. Images are delivered
+// server-side (the provider's own URL is handed back to the agent, small
+// enough not to bother storing). Video is delivered to the user's own
+// machine via the companion app -- Vultr never stores or proxies the
+// file -- see deliveryStatus below and the companion/jobs result route.
+model MediaJob {
+  id                       String    @id @default(cuid())
+  instanceId               String
+  userId                   String
+  delegatedJobId           String?   @unique
+  mediaKind                String    // 'image' | 'video'
+  provider                 String    // 'fal'
+  model                    String
+  prompt                   String
+  durationSeconds          Int?      // video only
+  creditsHeld              Int
+  creditsCharged           Int?
+  status                   String    @default("pending") // pending|generating|awaiting_companion|delivered|failed|expired
+  providerResultUrl        String?   // the PROVIDER's transient CDN link, never a Vultr-hosted one
+  providerResultExpiresAt  DateTime?
+  resultSummary            String?
+  createdAt                DateTime  @default(now())
+  updatedAt                DateTime  @updatedAt
+
+  instance     Instance            @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  delegatedJob DelegatedJob?       @relation(fields: [delegatedJobId], references: [id])
+  transactions CreditTransaction[]
+
+  @@index([instanceId])
+  @@index([userId])
+  @@index([status, providerResultExpiresAt])
+  @@map("media_job")
 }

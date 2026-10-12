@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { getTierLimits } from '@/lib/stripe'
 import Link from 'next/link'
 import ManageSubscriptionButton from '@/components/dashboard/ManageSubscriptionButton'
+import BuyCreditsCard from '@/components/dashboard/BuyCreditsCard'
 
 const ALL_FEATURES = [
   { label: '1 Agent Instance', tiers: ['starter', 'pro', 'enterprise'] },
@@ -150,6 +151,8 @@ export default async function PlanTab() {
 
         <ManageSubscriptionButton />
       </div>
+
+      <BuyCreditsCard />
 
       {/* Plan Features */}
       <div className="rounded-xl bg-zinc-800 border border-zinc-700 p-6 mb-6">

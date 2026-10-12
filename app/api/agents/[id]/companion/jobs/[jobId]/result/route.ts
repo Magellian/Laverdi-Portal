@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { prisma } from '@/lib/prisma'
+import { finalizeCharge, releaseHold } from '@/lib/credits'
 
 const VALID_STATUSES = new Set(['completed', 'failed'])
 
@@ -57,6 +58,31 @@ export async function POST(
     where: { id },
     data: { companionStatus: 'paired', companionLastSeen: new Date() },
   })
+
+  // render_job + video: this result IS the companion confirming it saved
+  // the file locally (or failed to). That confirmation is what finalizes
+  // the credit charge -- see the Architecture section of the media add-on
+  // scoping doc ("credits are reserved before the provider call, not
+  // after"). A failed download releases the hold instead of charging for
+  // a video that never reached the user's machine.
+  if (job.kind === 'render_job') {
+    const mediaJob = await prisma.mediaJob.findUnique({ where: { delegatedJobId: jobId } })
+    if (mediaJob && mediaJob.status === 'awaiting_companion') {
+      if (status === 'completed') {
+        await finalizeCharge(mediaJob.userId, mediaJob.creditsHeld, mediaJob.id)
+        await prisma.mediaJob.update({
+          where: { id: mediaJob.id },
+          data: { status: 'delivered', creditsCharged: mediaJob.creditsHeld, resultSummary: resultSummary?.slice(0, 4000) ?? null },
+        })
+      } else {
+        await releaseHold(mediaJob.userId, mediaJob.creditsHeld, mediaJob.id, resultSummary || 'Companion reported failure')
+        await prisma.mediaJob.update({
+          where: { id: mediaJob.id },
+          data: { status: 'failed', resultSummary: resultSummary?.slice(0, 4000) ?? null },
+        })
+      }
+    }
+  }
 
   return NextResponse.json({ status: 'ok' })
 }
