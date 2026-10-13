@@ -99,6 +99,21 @@ export default function DocsTab() {
               token from Telegram's BotFather.
             </p>
 
+            <div className="mb-6 rounded-lg overflow-hidden border border-zinc-700 bg-black">
+              <video
+                className="w-full aspect-video"
+                controls
+                preload="metadata"
+                poster="/media/telegram-setup-poster.jpg"
+              >
+                <source src="/media/telegram-setup.mp4" type="video/mp4" />
+                Your browser doesn&apos;t support embedded video. Follow the written steps below instead.
+              </video>
+              <p className="px-4 py-2 text-xs text-zinc-500 bg-zinc-900 border-t border-zinc-800">
+                Illustrated walkthrough (captions only, no audio) — covers the same 5 steps below.
+              </p>
+            </div>
+
             <div className="space-y-5">
               <div>
                 <div className="flex items-start gap-3 mb-2">
