@@ -43,6 +43,9 @@ services:
       - PROVISIONER_URL=http://host.docker.internal:9090
       - EMAIL_FROM=${EMAIL_FROM:-noreply@laverdi.tech}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - FAL_API_KEY=${FAL_API_KEY}
+      - FAL_IMAGE_MODEL=${FAL_IMAGE_MODEL}
+      - FAL_VIDEO_MODEL=${FAL_VIDEO_MODEL}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     restart: unless-stopped
